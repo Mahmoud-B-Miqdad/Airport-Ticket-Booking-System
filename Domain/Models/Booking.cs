@@ -9,23 +9,23 @@ namespace AirportTicketBookingSystem.Domain.Models
     public class Booking
     {
         public int Id { get; set; }
-        public Passenger Passenger { get; set; }
-        public Flight Flight { get; set; }
+        public int FlightId { get; set; }
+        public int PassengerId { get; set; }
         public string SeatClass { get; set; }
         public double Price { get; set; }
 
-        public Booking(int id, Passenger passenger, Flight flight, string seatClass, double price)
+        public Booking(int id, int passenger, int flightid, string seatClass, double price)
         {
             Id = id;
-            Passenger = passenger;
-            Flight = flight;
+            PassengerId = passenger;
+            FlightId = flightid;
             SeatClass = seatClass;
             Price = price;
         }
 
         public override string ToString()
         {
-            return $"Booking {Id}: {Passenger.Name} -> {Flight.DepartureCountry} to {Flight.DestinationCountry} [{SeatClass}] - ${Price}";
+            return $"Booking {Id}: PassengerId: {PassengerId} -> FlightId: {FlightId} Seat: [{SeatClass}] - ${Price}";
         }
     }
 }

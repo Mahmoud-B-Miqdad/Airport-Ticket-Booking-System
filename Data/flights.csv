@@ -1,6 +1,6 @@
 FlightId,DepartureCountry,DestinationCountry,DepartureDate,EconomyPrice,BusinessPrice,FirstClassPrice,DepartureAirport,ArrivalAirport
-1,USA,Canada,2025-02-04 07:54:28.141471,500.0,1000.0,1500.0,JFK,YYZ
-2,Germany,USA,2025-02-06 07:54:28.141481,450.0,900.0,1400.0,Frankfurt,JFK
-3,France,Spain,2025-02-09 07:54:28.141482,400.0,850.0,1300.0,Charles de Gaulle,Madrid
-4,Italy,UK,2025-02-11 07:54:28.141483,550.0,1100.0,1600.0,Fiumicino,London
-5,Japan,Australia,2025-02-14 07:54:28.141484,600.0,1200.0,1800.0,Narita,Sydney
+1,USA,Canada,54:28.1,500,1000,1500,JFK,YYZ
+2,Germany,USA,54:28.1,450,900,1400,Frankfurt,JFK
+3,France,Spain,54:28.1,400,850,1300,Charles de Gaulle,Madrid
+4,Italy,UK,54:28.1,550,1100,1600,Fiumicino,London
+5,Japan,Australia,54:28.1,600,1200,1800,Narita,Sydney

@@ -1,0 +1,6 @@
+BookingId,FlightId,PassengerId,Class,Price
+101,1,1001,Economy,600
+102,2,1002,Business,1200
+103,3,1003,First Class,1900
+104,4,1004,Economy,550
+105,5,1005,Business,1000

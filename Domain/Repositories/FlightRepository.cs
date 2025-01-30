@@ -3,11 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+
 using AirportTicketBookingSystem.Domain.Models;
 
 namespace AirportTicketBookingSystem.Domain.Repositories
@@ -76,11 +73,12 @@ namespace AirportTicketBookingSystem.Domain.Repositories
         {
             var lines = new List<string>
             {
-                "Id,DepartureCountry,DestinationCountry,DepartureAirport,ArrivalAirport,DepartureDate,EconomyPrice,BusinessPrice,FirstClassPrice"
+                "Id,DepartureCountry,DestinationCountry,DepartureDate,EconomyPrice,BusinessPrice,FirstClassPrice,DepartureAirport,ArrivalAirport"
             };
 
             lines.AddRange(_flights.Select(f =>
-                $"{f.Id},{f.DepartureCountry},{f.DestinationCountry},{f.DepartureAirport},{f.ArrivalAirport},{f.DepartureDate:yyyy-MM-dd},{f.EconomyPrice},{f.BusinessPrice},{f.FirstClassPrice}"
+                $"{f.Id},{f.DepartureCountry},{f.DestinationCountry},{f.DepartureDate:yyyy-MM-dd},{f.EconomyPrice}," +
+                $"{f.BusinessPrice},{f.FirstClassPrice},{f.DepartureAirport},{f.ArrivalAirport}"
             ));
 
             File.WriteAllLines(_filePath, lines);
