@@ -39,5 +39,21 @@ namespace AirportTicketBookingSystem.Domain.Services
         {
             return _bookingRepository.GetAllBookings();
         }
+
+        public void ModifyBooking(int bookingId, int newFlightId, string newSeatClass)
+        {
+            var booking = _bookingRepository.GetBookingById(bookingId);
+            if (booking == null)
+            {
+                Console.WriteLine("❌ Booking not found.");
+                return;
+            }
+
+            booking.FlightId = newFlightId;
+            booking.SeatClass = newSeatClass;
+            _bookingRepository.UpdateBooking(booking);
+
+            Console.WriteLine($"✅ Booking ID {bookingId} has been updated successfully.");
+        }
     }
 }

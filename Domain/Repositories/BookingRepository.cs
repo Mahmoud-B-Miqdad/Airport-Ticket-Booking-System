@@ -64,6 +64,17 @@ namespace AirportTicketBookingSystem.Domain.Repositories
             return _bookings;
         }
 
+        public void UpdateBooking(Booking updatedBooking)
+        {
+            var existingBooking = _bookings.FirstOrDefault(b => b.Id == updatedBooking.Id);
+            if (existingBooking != null)
+            {
+                existingBooking.FlightId = updatedBooking.FlightId;
+                existingBooking.SeatClass = updatedBooking.SeatClass;
+                SaveBookings();
+            }
+        }
+
         private void LoadBookings()
         {
             var lines = File.ReadAllLines(_filePath);
