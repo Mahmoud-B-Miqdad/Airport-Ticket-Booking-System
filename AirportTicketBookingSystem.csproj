@@ -8,9 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\Models\" />
-    <Folder Include="Domain\Repositories\" />
-    <Folder Include="Domain\Services\" />
     <Folder Include="Domain\Utilities\" />
   </ItemGroup>
 
