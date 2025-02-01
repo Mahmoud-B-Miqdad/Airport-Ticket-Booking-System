@@ -43,6 +43,7 @@ namespace AirportTicketBookingSystem.Utilities
                         SearchAndDisplayFlights();
                         break;
                     case "3":
+                        ManageBookings();
                         break;
                     case "4":
                         exit = true;
@@ -175,7 +176,74 @@ namespace AirportTicketBookingSystem.Utilities
         }
 
 
+        private void ManageMenue()
+        {
+            Console.WriteLine("1. Cancel a Booking");
+            Console.WriteLine("2. Modify a Booking");
+            Console.WriteLine("3. Back to Main Menu");
+        }
+
+        private void CancelBooking()
+        {
+            Console.WriteLine("Enter booking ID to cancel:");
+            int cancelId = int.Parse(Console.ReadLine());
+            _bookingService.CancelBooking(cancelId);
+        }
+
+        private void ModifyBooking()
+        {
+            Console.WriteLine("Enter booking ID to modify:");
+            int modifyId = int.Parse(Console.ReadLine());
+
+            Console.WriteLine("Enter FlightID:");
+            int flightid = int.Parse(Console.ReadLine());
+
+            string newClass = ValidateSeatClass();
+
+            _bookingService.ModifyBooking(modifyId, flightid, newClass);
+        }
 
 
+        private void ManageBookings()
+        {
+            Console.WriteLine("Enter your passenger ID:");
+            int passengerId = int.Parse(Console.ReadLine());
+
+            var bookings = _bookingService.GetBookingsByPassenger(passengerId);
+
+            if (bookings == null)
+            {
+                Console.WriteLine("passenger Not have booking:");
+                return;
+            }
+
+            Console.WriteLine("Your Bookings:\r\n");
+            foreach (var booking in bookings)
+            {
+                Console.WriteLine($"ID: {booking.Id}, Flight ID: {booking.FlightId}, Class: {booking.SeatClass}, Date: {booking.BookDate}\r\n");
+            }
+
+            ManageMenue();
+
+            string choice = Console.ReadLine();
+
+            switch (choice)
+            {
+                case "1":
+                    CancelBooking();
+                    break;
+
+                case "2":
+                    ModifyBooking();
+                    break;
+
+                case "3":
+                    break;
+
+                default:
+                    Console.WriteLine("Invalid option.");
+                    break;
+            }
+        }
     }
 }

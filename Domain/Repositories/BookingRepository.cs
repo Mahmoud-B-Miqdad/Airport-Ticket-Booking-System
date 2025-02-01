@@ -21,9 +21,6 @@ namespace AirportTicketBookingSystem.Domain.Repositories
             string relativePath = @"Data\bookings.csv";
             _filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath);
 
-            Console.WriteLine($" Flight file path: {_filePath}");
-
-
 
             _bookings = new List<Booking>();
 
@@ -52,11 +49,14 @@ namespace AirportTicketBookingSystem.Domain.Repositories
         public void CancelBooking(int bookingId)
         {
             var booking = GetBookingById(bookingId);
-            if (booking != null)
+            if (booking == null)
             {
-                _bookings.Remove(booking);
-                SaveBookings();
+                Console.WriteLine($"Booking ID {bookingId} Not Found.");
+                return;
             }
+            _bookings.Remove(booking);
+            Console.WriteLine($"Booking for {bookingId} canceled successfully.");
+            SaveBookings();
         }
 
         public List<Booking> GetAllBookings()
@@ -100,7 +100,7 @@ namespace AirportTicketBookingSystem.Domain.Repositories
                             FlightId = int.Parse(parts[1]),
                             SeatClass = parts[5],
                             passenger = _passenger,
-                            BookDate = DateTime.Now
+                            BookDate = DateTime.Parse(parts[6])
                         };
                             
                         _bookings.Add(booking);

@@ -32,7 +32,7 @@ namespace AirportTicketBookingSystem.Domain.Services
         public void CancelBooking(int bookingId)
         {
             _bookingRepository.CancelBooking(bookingId);
-            Console.WriteLine($"Booking ID {bookingId} has been canceled successfully.");
+            
         }
 
         public List<Booking> GetAllBookings()
@@ -45,7 +45,7 @@ namespace AirportTicketBookingSystem.Domain.Services
             var booking = _bookingRepository.GetBookingById(bookingId);
             if (booking == null)
             {
-                Console.WriteLine("❌ Booking not found.");
+                Console.WriteLine("Booking not found.");
                 return;
             }
 
