@@ -12,12 +12,12 @@ namespace AirportTicketBookingSystem.Domain.Models
         public string Name { get; set; }
         public string Email { get; set; }
 
-        public Passenger(int id, string name, string email)
-        {
-            Id = id;
-            Name = name;
-            Email = email;
-        }
+        //public Passenger(int id, string name, string email)
+        //{
+        //    Id = id;
+        //    Name = name;
+        //    Email = email;
+        //}
 
         public override string ToString()
         {

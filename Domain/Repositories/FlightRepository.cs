@@ -16,17 +16,14 @@ namespace AirportTicketBookingSystem.Domain.Repositories
 
         public FlightRepository()
         {
-            string dataFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");
-            _filePath = Path.Combine(dataFolder, "flights.csv");
 
-            if (!Directory.Exists(dataFolder))
-            {
-                Directory.CreateDirectory(dataFolder);
-            }
+            string relativePath = @"Data\flights.csv";
+            _filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath);
 
             _flights = new List<Flight>();
 
             if (File.Exists(_filePath))
+
             {
                 LoadFlights();
             }
@@ -43,42 +40,59 @@ namespace AirportTicketBookingSystem.Domain.Repositories
             return _flights;
         }
 
+        public Flight GetFlightById(int flightId)
+        {
+            return _flights.FirstOrDefault(f => f.Id == flightId);
+        }
+
         private void LoadFlights()
         {
             var lines = File.ReadAllLines(_filePath);
             foreach (var line in lines.Skip(1)) 
             {
                 var parts = line.Split(',');
-                if (parts.Length == 9)
+                if (parts.Length == 7) 
                 {
                     try
                     {
-                        var flight = new Flight(
-                            int.Parse(parts[0]),
-                            parts[1], parts[2], parts[3], parts[4],
-                            DateTime.Parse(parts[5]),
-                            double.Parse(parts[6]), double.Parse(parts[7]), double.Parse(parts[8])
-                        );
+                        var prices = parts[6]
+                            .Split('|')
+                            .Select(p => p.Split(':'))
+                            .ToDictionary(p => p[0], p => double.Parse(p[1]));
+
+                        var flight = new Flight
+                        {
+                            Id = int.Parse(parts[0]),
+                            DepartureCountry = parts[1],
+                            DestinationCountry = parts[2],
+                            DepartureDate = DateTime.Parse(parts[3]),
+                            DepartureAirport = parts[4],
+                            ArrivalAirport = parts[5],
+                            Prices = prices
+                        };
+
                         _flights.Add(flight);
+
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"⚠️ Error in loading the trip: {ex.Message}");
+                        Console.WriteLine($"Error in loading the trip: {ex.Message}");
                     }
                 }
             }
         }
 
+
         private void SaveFlights()
         {
             var lines = new List<string>
-            {
-                "Id,DepartureCountry,DestinationCountry,DepartureDate,EconomyPrice,BusinessPrice,FirstClassPrice,DepartureAirport,ArrivalAirport"
-            };
+    {
+        "Id,DepartureCountry,DestinationCountry,DepartureDate,DepartureAirport,ArrivalAirport,Prices"
+    };
 
             lines.AddRange(_flights.Select(f =>
-                $"{f.Id},{f.DepartureCountry},{f.DestinationCountry},{f.DepartureDate:yyyy-MM-dd},{f.EconomyPrice}," +
-                $"{f.BusinessPrice},{f.FirstClassPrice},{f.DepartureAirport},{f.ArrivalAirport}"
+                $"{f.Id},{f.DepartureCountry},{f.DestinationCountry},{f.DepartureDate:yyyy-MM-dd},{f.DepartureAirport},{f.ArrivalAirport}," +
+                $"{string.Join("|", f.Prices.Select(p => $"{p.Key}:{p.Value}"))}"
             ));
 
             File.WriteAllLines(_filePath, lines);

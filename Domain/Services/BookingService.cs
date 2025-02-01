@@ -13,15 +13,15 @@ namespace AirportTicketBookingSystem.Domain.Services
     {
         private readonly BookingRepository _bookingRepository;
 
-        public BookingService(BookingRepository bookingRepository)
+        public BookingService()
         {
-            _bookingRepository = bookingRepository;
+            _bookingRepository = new BookingRepository();
         }
 
         public void AddBooking(Booking booking)
         {
             _bookingRepository.AddBooking(booking);
-            Console.WriteLine($"✅ Booking for {booking.PassengerId} added successfully.");
+            Console.WriteLine($"✅ Booking for {booking.passenger.Id} added successfully.");
         }
 
         public List<Booking> GetBookingsByPassenger(int passengerId)

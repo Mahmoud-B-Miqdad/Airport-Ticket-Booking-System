@@ -1,6 +1,0 @@
-FlightId,DepartureCountry,DestinationCountry,DepartureDate,EconomyPrice,BusinessPrice,FirstClassPrice,DepartureAirport,ArrivalAirport
-1,USA,Canada,54:28.1,500,1000,1500,JFK,YYZ
-2,Germany,USA,54:28.1,450,900,1400,Frankfurt,JFK
-3,France,Spain,54:28.1,400,850,1300,Charles de Gaulle,Madrid
-4,Italy,UK,54:28.1,550,1100,1600,Fiumicino,London
-5,Japan,Australia,54:28.1,600,1200,1800,Narita,Sydney

@@ -14,16 +14,16 @@ namespace AirportTicketBookingSystem.Domain.Repositories
     {
         private readonly string _filePath;
         private readonly List<Booking> _bookings;
+        
 
         public BookingRepository()
         {
-            string dataFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");
-            _filePath = Path.Combine(dataFolder, "bookings.csv");
+            string relativePath = @"Data\bookings.csv";
+            _filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath);
 
-            if (!Directory.Exists(dataFolder))
-            {
-                Directory.CreateDirectory(dataFolder);
-            }
+            Console.WriteLine($" Flight file path: {_filePath}");
+
+
 
             _bookings = new List<Booking>();
 
@@ -41,7 +41,7 @@ namespace AirportTicketBookingSystem.Domain.Repositories
 
         public List<Booking> GetBookingsByPassenger(int passengerId)
         {
-            return _bookings.Where(b => b.PassengerId == passengerId).ToList(); 
+            return _bookings.Where(b => b.passenger.Id == passengerId).ToList(); 
         }
 
         public Booking GetBookingById(int bookingId)
@@ -51,7 +51,7 @@ namespace AirportTicketBookingSystem.Domain.Repositories
 
         public void CancelBooking(int bookingId)
         {
-            var booking = _bookings.FirstOrDefault(b => b.Id == bookingId);
+            var booking = GetBookingById(bookingId);
             if (booking != null)
             {
                 _bookings.Remove(booking);
@@ -66,7 +66,7 @@ namespace AirportTicketBookingSystem.Domain.Repositories
 
         public void UpdateBooking(Booking updatedBooking)
         {
-            var existingBooking = _bookings.FirstOrDefault(b => b.Id == updatedBooking.Id);
+            var existingBooking = GetBookingById(updatedBooking.Id);
             if (existingBooking != null)
             {
                 existingBooking.FlightId = updatedBooking.FlightId;
@@ -81,23 +81,33 @@ namespace AirportTicketBookingSystem.Domain.Repositories
             foreach (var line in lines.Skip(1))
             {
                 var parts = line.Split(',');
-                if (parts.Length == 5)
+                if (parts.Length == 7)
                 {
                     try
                     {
-                        var booking = new Booking(
-                            int.Parse(parts[0]),
-                            int.Parse(parts[1]),
-                            int.Parse(parts[2]),
-                            parts[3],
-                            double.Parse(parts[4])
-                        );
+                        var _passenger = new Passenger
+                        {
+                            Id = int.Parse(parts[2]),
+                            Name = parts[3],
+                            Email = parts[4]
+                        };
 
+
+
+                        var booking = new Booking
+                        {
+                            Id = int.Parse(parts[0]),
+                            FlightId = int.Parse(parts[1]),
+                            SeatClass = parts[5],
+                            passenger = _passenger,
+                            BookDate = DateTime.Now
+                        };
+                            
                         _bookings.Add(booking);
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"⚠️ Error in loading the trip: {ex.Message}");
+                        Console.WriteLine($"Error in loading the trip: {ex.Message}");
                     }
                 }
             }
@@ -107,11 +117,11 @@ namespace AirportTicketBookingSystem.Domain.Repositories
         {
             var lines = new List<string>
             {
-                "Id,FlightId,PassengerId,Class,Price"
+                "Id,FlightId,PassengerId,PassengerName,PassengerEmail,Class,BookDate"
             };
 
             lines.AddRange(_bookings.Select(b =>
-                $"{b.Id},{b.FlightId},{b.PassengerId},{b.SeatClass},{b.Price}"
+                $"{b.Id},{b.FlightId},{b.passenger.Id},{b.passenger.Name},{b.passenger.Email},{b.SeatClass},{b.BookDate}"
             ));
 
             File.WriteAllLines(_filePath, lines);

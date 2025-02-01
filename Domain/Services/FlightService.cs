@@ -48,15 +48,18 @@ namespace AirportTicketBookingSystem.Domain.Services
             return _flightRepository.GetAllFlights();
         }
 
-        private double GetPriceByClass(Flight flight, string seatClass)
+        public Flight GetFlightById(int flightId)
         {
-            return seatClass.ToLower() switch
+            return _flightRepository.GetFlightById(flightId);
+        }
+
+        public double GetPriceByClass(Flight flight, string seatClass)
+        {
+            if (flight.Prices.TryGetValue(seatClass.ToLower(), out double price))
             {
-                "economy" => flight.EconomyPrice,
-                "business" => flight.BusinessPrice,
-                "first class" => flight.FirstClassPrice,
-                _ => flight.EconomyPrice
-            };
+                return price;
+            }
+            return flight.Prices.ContainsKey("c") ? flight.Prices["economy"] : 0; 
         }
     }
 }
