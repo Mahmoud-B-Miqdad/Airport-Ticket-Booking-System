@@ -21,7 +21,7 @@ namespace AirportTicketBookingSystem.Domain.Services
         public void AddBooking(Booking booking)
         {
             _bookingRepository.AddBooking(booking);
-            Console.WriteLine($"✅ Booking for {booking.passenger.Id} added successfully.");
+            Console.WriteLine($"Booking for {booking.passenger.Id} added successfully.");
         }
 
         public List<Booking> GetBookingsByPassenger(int passengerId)
@@ -32,7 +32,7 @@ namespace AirportTicketBookingSystem.Domain.Services
         public void CancelBooking(int bookingId)
         {
             _bookingRepository.CancelBooking(bookingId);
-            Console.WriteLine($"✅ Booking ID {bookingId} has been canceled successfully.");
+            Console.WriteLine($"Booking ID {bookingId} has been canceled successfully.");
         }
 
         public List<Booking> GetAllBookings()
@@ -53,7 +53,7 @@ namespace AirportTicketBookingSystem.Domain.Services
             booking.SeatClass = newSeatClass;
             _bookingRepository.UpdateBooking(booking);
 
-            Console.WriteLine($"✅ Booking ID {bookingId} has been updated successfully.");
+            Console.WriteLine($"Booking ID {bookingId} has been updated successfully.");
         }
     }
 }

@@ -53,7 +53,7 @@ namespace AirportTicketBookingSystem.Domain.Services
             return _flightRepository.GetFlightById(flightId);
         }
 
-        public double GetPriceByClass(Flight flight, string seatClass)
+        private double GetPriceByClass(Flight flight, string seatClass)
         {
             if (flight.Prices.TryGetValue(seatClass.ToLower(), out double price))
             {
