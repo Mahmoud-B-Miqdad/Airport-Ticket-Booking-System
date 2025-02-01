@@ -21,7 +21,7 @@ namespace AirportTicketBookingSystem.Domain.Services
         public void AddBooking(Booking booking)
         {
             _bookingRepository.AddBooking(booking);
-            Console.WriteLine($"Booking for {booking.passenger.Id} added successfully.");
+            
         }
 
         public List<Booking> GetBookingsByPassenger(int passengerId)

@@ -40,10 +40,9 @@ namespace AirportTicketBookingSystem.Utilities
                         BookFlight();
                         break;
                     case "2":
-                        //SearchFlights();
+                        SearchAndDisplayFlights();
                         break;
                     case "3":
-                        ManageBookings();
                         break;
                     case "4":
                         exit = true;
@@ -113,7 +112,7 @@ namespace AirportTicketBookingSystem.Utilities
         private void BookFlight()
         {
             int? flightId = GetFlightId();
-            if  (flightId == null)
+            if (flightId == null)
                 return;
 
             var passenger = PassengerInfo();
@@ -134,62 +133,49 @@ namespace AirportTicketBookingSystem.Utilities
             Console.WriteLine($"Booking for {booking.passenger.Id} added successfully.");
         }
 
-        private void ManageBookings()
+
+        private void SearchAndDisplayFlights()
         {
-            Console.WriteLine("Enter your passenger ID:");
-            int passengerId = int.Parse(Console.ReadLine());
+            Console.Write("Enter Departure Country: ");
+            string departureCountry = Console.ReadLine()?.Trim();
 
-            var bookings = _bookingService.GetBookingsByPassenger(passengerId);
+            Console.Write("Enter Destination Country: ");
+            string destinationCountry = Console.ReadLine()?.Trim();
 
-            if (bookings == null)
+            Console.Write("Enter Departure Airport: ");
+            string departureAirport = Console.ReadLine()?.Trim();
+
+            Console.Write("Enter Arrival Airport: ");
+            string arrivalAirport = Console.ReadLine()?.Trim();
+
+            Console.Write("Enter Departure Date (yyyy-MM-dd) or leave empty: ");
+            string dateInput = Console.ReadLine()?.Trim();
+            DateTime? departureDate = string.IsNullOrEmpty(dateInput) ? null : DateTime.Parse(dateInput);
+
+            string seatClass = ValidateSeatClass();
+
+            Console.Write("Enter Maximum Price or leave empty: ");
+            string priceInput = Console.ReadLine()?.Trim();
+            double? maxPrice = string.IsNullOrEmpty(priceInput) ? null : double.Parse(priceInput);
+
+            var flights = _flightService.SearchFlights(departureCountry, destinationCountry, departureAirport, arrivalAirport, departureDate, seatClass, maxPrice);
+
+            if (flights.Any())
             {
-                Console.WriteLine("passenger Not have booking:");
-                return;
+                Console.WriteLine("\nAvailable Flights:");
+                foreach (var flight in flights)
+                {
+                    Console.WriteLine($"Flight ID: {flight.Id}, From {flight.DepartureCountry} ({flight.DepartureAirport}) to {flight.DestinationCountry} ({flight.ArrivalAirport}), Date: {flight.DepartureDate}, Price: {flight.Prices[seatClass.ToLower()]:C}");
+                }
             }
-
-
-
-            Console.WriteLine("Your Bookings:");
-            foreach (var booking in bookings)
+            else
             {
-                Console.WriteLine($"ID: {booking.Id}, Flight ID: {booking.FlightId}, Class: {booking.SeatClass}, Date: {booking.BookDate}");
-            }
-
-            Console.WriteLine("1. Cancel a Booking");
-            Console.WriteLine("2. Modify a Booking");
-            Console.WriteLine("3. Back to Main Menu");
-
-            string choice = Console.ReadLine();
-
-            switch (choice)
-            {
-                case "1":
-                    Console.WriteLine("Enter booking ID to cancel:");
-                    int cancelId = int.Parse(Console.ReadLine());
-                    _bookingService.CancelBooking(cancelId);
-                    Console.WriteLine("Booking cancelled successfully.");
-
-                    break;
-
-                case "2":
-                    Console.WriteLine("Enter booking ID to modify:");
-                    int modifyId = int.Parse(Console.ReadLine());
-                    Console.WriteLine("Enter FlightID:");
-                    int flightid = int.Parse(Console.ReadLine());
-                    Console.WriteLine("Enter new class (Economy, Business, First Class):");
-                    string newClass = Console.ReadLine();
-                    _bookingService.ModifyBooking(modifyId, flightid, newClass);
-                    Console.WriteLine("Booking modified successfully.");
-
-                    break;
-
-                case "3":
-                    break;
-
-                default:
-                    Console.WriteLine("Invalid option.");
-                    break;
+                Console.WriteLine("\nNo flights found matching your criteria.");
             }
         }
+
+
+
+
     }
 }
