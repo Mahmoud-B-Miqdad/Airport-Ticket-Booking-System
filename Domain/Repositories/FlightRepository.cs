@@ -40,7 +40,7 @@ namespace AirportTicketBookingSystem.Domain.Repositories
             return _flights;
         }
 
-        public Flight GetFlightById(int flightId)
+        public Flight GetFlightById(int? flightId)
         {
             return _flights.FirstOrDefault(f => f.Id == flightId);
         }

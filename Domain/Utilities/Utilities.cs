@@ -21,21 +21,38 @@ namespace AirportTicketBookingSystem.Utilities
             BookingId = LastBooking.Id;
         }
 
+        private void ReadKey()
+        {
+            Console.WriteLine("Press Enter to back");
+            Console.ReadKey();
+        }
+
         private void MainMenu()
         {
-            Console.WriteLine("\nPlease select an option:");
+            Console.WriteLine("Welcome to the Airport Ticket Booking System!");
+
+
+            Console.WriteLine("\n=====================");
+            Console.WriteLine("   Main Menu");
+            Console.WriteLine("=====================");
             Console.WriteLine("1. Book a Flight");
             Console.WriteLine("2. Search for Available Flights");
-            Console.WriteLine("3. Manage Bookings");
-            Console.WriteLine("4. Exit");
+            Console.WriteLine("3. Manage My Bookings");
+            Console.WriteLine("4. Admin Options");
+            Console.WriteLine("5. Exit");
+            Console.WriteLine("=====================");
         }
+
         public void Start()
         {
-            Console.WriteLine("Welcome to the Airport Ticket Booking System!");
+
             bool exit = false;
 
             while (!exit)
             {
+
+                Console.Clear();
+
                 MainMenu();
 
                 string choice = Console.ReadLine();
@@ -52,6 +69,9 @@ namespace AirportTicketBookingSystem.Utilities
                         ManageBookings();
                         break;
                     case "4":
+                        AdminOptions();
+                        break;
+                    case "5":
                         exit = true;
                         Console.WriteLine("Thank you for using the system. Goodbye!");
                         break;
@@ -154,6 +174,8 @@ namespace AirportTicketBookingSystem.Utilities
             _bookingService.AddBooking(booking);
             Console.WriteLine($"Booking added successfully.");
             Console.WriteLine($"Your Id is: {booking.passenger.Id}.");
+
+            ReadKey();
         }
 
 
@@ -190,11 +212,14 @@ namespace AirportTicketBookingSystem.Utilities
                 {
                     Console.WriteLine($"Flight ID: {flight.Id}, From {flight.DepartureCountry} ({flight.DepartureAirport}) to {flight.DestinationCountry} ({flight.ArrivalAirport}), Date: {flight.DepartureDate}, Price: {flight.Prices[seatClass.ToLower()]:C}");
                 }
+
             }
             else
             {
                 Console.WriteLine("\nNo flights found matching your criteria.");
             }
+
+            ReadKey();
         }
 
 
@@ -266,6 +291,130 @@ namespace AirportTicketBookingSystem.Utilities
                     Console.WriteLine("Invalid option.");
                     break;
             }
+
+            ReadKey();
         }
+
+
+        private void SearchAndDisplayBookings()
+        {
+            Console.Write("Enter Departure Country: ");
+            string departureCountry = Console.ReadLine()?.Trim();
+
+            Console.Write("Enter Destination Country: ");
+            string destinationCountry = Console.ReadLine()?.Trim();
+
+            Console.Write("Enter Departure Airport: ");
+            string departureAirport = Console.ReadLine()?.Trim();
+
+            Console.Write("Enter Arrival Airport: ");
+            string arrivalAirport = Console.ReadLine()?.Trim();
+
+            Console.Write("Enter Departure Date (yyyy-MM-dd) or leave empty: ");
+            string dateInput = Console.ReadLine()?.Trim();
+            DateTime? departureDate = string.IsNullOrEmpty(dateInput) ? null : DateTime.Parse(dateInput);
+
+            Console.Write("Enter Passenger Name or leave empty: ");
+            string passenger = Console.ReadLine()?.Trim();
+
+            string seatClass = ValidateSeatClass();
+
+            Console.Write("Enter Maximum Price or leave empty: ");
+            string priceInput = Console.ReadLine()?.Trim();
+            double? maxPrice = string.IsNullOrEmpty(priceInput) ? null : double.Parse(priceInput);
+
+            var bookings = _bookingService.FilterBookings(maxPrice, departureCountry, destinationCountry, departureDate, departureAirport, arrivalAirport, passenger, seatClass);
+
+            if (bookings.Any())
+            {
+                Console.WriteLine("\nFiltered Bookings based on your search:");
+                foreach (var booking in bookings)
+                {
+                    var flight = _flightService.GetFlightById(booking.FlightId);
+                    double price = flight != null ? _flightService.GetPriceByClass(flight, booking.SeatClass) : 0.0;
+
+                    Console.WriteLine($"Booking ID: {booking.Id}, Passenger: {booking.passenger.Name}, Flight ID: {booking.FlightId}, Seat Class: {booking.SeatClass}, Price: {price:C}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("\nNo bookings found matching your criteria.");
+            }
+
+        }
+
+
+        private void AdminMenu()
+        {
+            Console.WriteLine("\n=====================");
+            Console.WriteLine("   Admin Options");
+            Console.WriteLine("=====================");
+            Console.WriteLine("1. Search and Display All Bookings");
+            Console.WriteLine("2. Exit Admin Options");
+            Console.WriteLine("=====================");
+        }
+
+
+        private bool AuthenticateUser()
+        {
+            string correctUsername = "admin";
+            string correctPassword = "1234";
+
+            Console.WriteLine("Please enter your username:");
+            string username = Console.ReadLine();
+
+            Console.WriteLine("Please enter your password:");
+            string password = Console.ReadLine();
+
+            if (username == correctUsername && password == correctPassword)
+            {
+                Console.WriteLine("Authentication successful!");
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("Invalid username or password. Please try again.");
+                return false;
+            }
+        }
+
+
+        private void AdminOptions()
+        {
+
+            Console.Clear();
+
+            bool isAuthenticated = false;
+            while (!isAuthenticated)
+            {
+                isAuthenticated = AuthenticateUser();
+            }
+
+
+            bool exit = false;
+            while (!exit)
+            {
+                Console.Clear();
+
+                AdminMenu();
+
+                string choice = Console.ReadLine();
+                switch (choice)
+                {
+                    case "1":
+                        SearchAndDisplayBookings();
+                        break;
+                    case "2":
+                        break;
+                    default:
+                        Console.WriteLine("Invalid option. Please try again.");
+                        break;
+                }
+                break;
+            }
+
+            ReadKey();
+        }
+
     }
 }
