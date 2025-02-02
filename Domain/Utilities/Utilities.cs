@@ -8,11 +8,17 @@ namespace AirportTicketBookingSystem.Utilities
     {
         private readonly FlightService _flightService;
         private readonly BookingService _bookingService;
+        private static int PassengerId;
+        private static int BookingId;
 
         public UserInteraction()
         {
             _flightService = new FlightService();
             _bookingService = new BookingService();
+
+            var LastBooking = _bookingService.GetLastBooking();
+            PassengerId = LastBooking.passenger.Id;
+            BookingId = LastBooking.Id;
         }
 
         private void MainMenu()
@@ -58,12 +64,12 @@ namespace AirportTicketBookingSystem.Utilities
 
         private int? GetFlightId()
         {
-            Console.WriteLine("Enter the flight ID you want to book:");
+            Console.WriteLine("\nEnter the flight ID you want to book:");
             int flightId = int.Parse(Console.ReadLine());
 
             if (_flightService.GetFlightById(flightId) == null)
             {
-                Console.WriteLine("Flight Not Found:");
+                Console.WriteLine("\nFlight Not Found:");
                 return null;
             }
 
@@ -83,7 +89,7 @@ namespace AirportTicketBookingSystem.Utilities
 
             var passenger = new Passenger
             {
-                Id = new Random().Next(1000, 9999),
+                Id = ++PassengerId,
                 Name = name,
                 Email = email,
             };
@@ -93,11 +99,17 @@ namespace AirportTicketBookingSystem.Utilities
 
         private string ValidateSeatClass()
         {
-            string seatClass;
+            string seatClass = "";
             while (true)
             {
                 Console.Write("Class (Economy, Business, First Class): ");
                 seatClass = Console.ReadLine().Trim();
+
+                if (seatClass == "")
+                {
+                    Console.WriteLine("Invalid class. Please enter 'Economy', 'Business', or 'First Class'.");
+                    continue;
+                }
 
                 if (string.IsNullOrEmpty(seatClass) ||
                     seatClass.Equals("Economy", StringComparison.OrdinalIgnoreCase) ||
@@ -108,21 +120,30 @@ namespace AirportTicketBookingSystem.Utilities
                 }
                 Console.WriteLine("Invalid class. Please enter 'Economy', 'Business', or 'First Class'.");
             }
+
         }
 
         private void BookFlight()
         {
+
+            var flights = _flightService.GetAllFlights();
+
+            Console.WriteLine("\nAvailable Flights:");
+            foreach (var flight in flights)
+            {
+                Console.WriteLine($"Flight ID: {flight.Id}, From ({flight.DepartureCountry}) to ({flight.DestinationCountry}) in Date: {flight.DepartureDate}");
+            }
+
             int? flightId = GetFlightId();
             if (flightId == null)
                 return;
 
             var passenger = PassengerInfo();
-
             string seatClass = ValidateSeatClass();
 
             var booking = new Booking
             {
-                Id = new Random().Next(100, 999),
+                Id = ++BookingId,
                 passenger = passenger,
                 FlightId = flightId,
                 SeatClass = seatClass,
@@ -131,7 +152,8 @@ namespace AirportTicketBookingSystem.Utilities
 
 
             _bookingService.AddBooking(booking);
-            Console.WriteLine($"Booking for {booking.passenger.Id} added successfully.");
+            Console.WriteLine($"Booking added successfully.");
+            Console.WriteLine($"Your Id is: {booking.passenger.Id}.");
         }
 
 
@@ -163,7 +185,7 @@ namespace AirportTicketBookingSystem.Utilities
 
             if (flights.Any())
             {
-                Console.WriteLine("\nAvailable Flights:");
+                Console.WriteLine("\nAvailable Flights based on your search:");
                 foreach (var flight in flights)
                 {
                     Console.WriteLine($"Flight ID: {flight.Id}, From {flight.DepartureCountry} ({flight.DepartureAirport}) to {flight.DestinationCountry} ({flight.ArrivalAirport}), Date: {flight.DepartureDate}, Price: {flight.Prices[seatClass.ToLower()]:C}");

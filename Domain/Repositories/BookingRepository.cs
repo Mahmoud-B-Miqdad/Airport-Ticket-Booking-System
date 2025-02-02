@@ -64,6 +64,11 @@ namespace AirportTicketBookingSystem.Domain.Repositories
             return _bookings;
         }
 
+        public Booking GetLastBooking()
+        {
+            return _bookings.Last();
+        }
+
         public void UpdateBooking(Booking updatedBooking)
         {
             var existingBooking = GetBookingById(updatedBooking.Id);

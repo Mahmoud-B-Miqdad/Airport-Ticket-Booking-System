@@ -40,6 +40,11 @@ namespace AirportTicketBookingSystem.Domain.Services
             return _bookingRepository.GetAllBookings();
         }
 
+        public Booking GetLastBooking()
+        {
+            return _bookingRepository.GetLastBooking();
+        }
+
         public void ModifyBooking(int bookingId, int newFlightId, string newSeatClass)
         {
             var booking = _bookingRepository.GetBookingById(bookingId);
