@@ -1,6 +1,7 @@
 ﻿using AirportTicketBookingSystem.Domain.Models;
 using AirportTicketBookingSystem.Domain.Services;
 using System;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AirportTicketBookingSystem.Utilities
 {
@@ -8,6 +9,7 @@ namespace AirportTicketBookingSystem.Utilities
     {
         private readonly FlightService _flightService;
         private readonly BookingService _bookingService;
+        private readonly CSVFlightImporter _csvFlightImporter;
         private static int PassengerId;
         private static int BookingId;
 
@@ -15,6 +17,7 @@ namespace AirportTicketBookingSystem.Utilities
         {
             _flightService = new FlightService();
             _bookingService = new BookingService();
+            _csvFlightImporter = new CSVFlightImporter();
 
             var LastBooking = _bookingService.GetLastBooking();
             PassengerId = LastBooking.passenger.Id;
@@ -24,7 +27,7 @@ namespace AirportTicketBookingSystem.Utilities
         private void ReadKey()
         {
             Console.WriteLine("Press Enter to back");
-            Console.ReadKey();
+            Console.ReadLine();
         }
 
         private void MainMenu()
@@ -350,7 +353,8 @@ namespace AirportTicketBookingSystem.Utilities
             Console.WriteLine("   Admin Options");
             Console.WriteLine("=====================");
             Console.WriteLine("1. Search and Display All Bookings");
-            Console.WriteLine("2. Exit Admin Options");
+            Console.WriteLine("2. Import Flights from CSV");
+            Console.WriteLine("3. Exit Admin Options");
             Console.WriteLine("=====================");
         }
 
@@ -378,11 +382,30 @@ namespace AirportTicketBookingSystem.Utilities
             }
         }
 
+        private void ImportFlightsFromCsv()
+        {
+            var flights = _csvFlightImporter.ImportFlights();
+
+            if (_csvFlightImporter.Errors.Count > 0)
+            {
+                Console.WriteLine("\nErrors occurred during import:\n");
+                foreach (var error in _csvFlightImporter.Errors)
+                {
+                    Console.WriteLine(error);
+                }
+            }
+
+            foreach (var flight in flights)
+            {
+                Console.WriteLine($"Flight ID: {flight.Id}, From ({flight.DepartureCountry}) to ({flight.DestinationCountry}) in Date: {flight.DepartureDate}");
+            }
+
+            Console.WriteLine($"\r\n{flights.Count} flights imported successfully.");
+        }
+
 
         private void AdminOptions()
         {
-
-            Console.Clear();
 
             bool isAuthenticated = false;
             while (!isAuthenticated)
@@ -405,6 +428,9 @@ namespace AirportTicketBookingSystem.Utilities
                         SearchAndDisplayBookings();
                         break;
                     case "2":
+                        ImportFlightsFromCsv();
+                        break;
+                    case "3":
                         break;
                     default:
                         Console.WriteLine("Invalid option. Please try again.");
