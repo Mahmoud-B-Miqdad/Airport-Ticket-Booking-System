@@ -96,7 +96,7 @@ namespace AirportTicketBookingSystem.Domain.Services
             Console.WriteLine("All Bookings:");
             foreach (var booking in bookings)
             {
-                Console.WriteLine($"Booking: {booking.Id}, FlightId: {booking.FlightId}, Passenger: {booking.passenger.Name}, Class: {booking.SeatClass}");
+                Console.WriteLine($"Booking: {booking.Id}, FlightId: {booking.FlightId}, Passenger: {booking.Passenger.Name}, Class: {booking.SeatClass}");
             }
             Console.WriteLine("\n\n");
 
@@ -105,7 +105,7 @@ namespace AirportTicketBookingSystem.Domain.Services
             var filteredBookings = bookings.Where(b =>
                 filteredFlights.Any(f => f.Id == b.FlightId) &&
                 (price == null || _Flights.GetPriceByClass(filteredFlights.FirstOrDefault(f => f.Id == b.FlightId), seatClass) <= price.Value) &&
-                (string.IsNullOrEmpty(passenger) || b.passenger.Name.Equals(passenger, StringComparison.OrdinalIgnoreCase)) &&
+                (string.IsNullOrEmpty(passenger) || b.Passenger.Name.Equals(passenger, StringComparison.OrdinalIgnoreCase)) &&
                 (string.IsNullOrEmpty(seatClass) || b.SeatClass.Equals(seatClass, StringComparison.OrdinalIgnoreCase))
             ).ToList();
 

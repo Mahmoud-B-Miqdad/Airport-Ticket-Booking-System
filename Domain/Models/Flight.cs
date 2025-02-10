@@ -14,7 +14,7 @@ namespace AirportTicketBookingSystem.Domain.Models
         public string DepartureAirport { get; set; }
         public string ArrivalAirport { get; set; }
         public DateTime DepartureDate { get; set; }
-        public Dictionary<string, double> Prices { get; set; } = new Dictionary<string, double>();
+        public Dictionary<string, double> Prices { get; set; } = new();
 
         //public Flight(int id, string departureCountry, string destinationCountry,
         //              string departureAirport, string arrivalAirport, DateTime departureDate,

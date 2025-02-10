@@ -38,7 +38,7 @@ namespace AirportTicketBookingSystem.Domain.Repositories
 
         public List<Booking> GetBookingsByPassenger(int passengerId)
         {
-            return _bookings.Where(b => b.passenger.Id == passengerId).ToList(); 
+            return _bookings.Where(b => b.Passenger.Id == passengerId).ToList(); 
         }
 
         public Booking GetBookingById(int bookingId)
@@ -104,7 +104,7 @@ namespace AirportTicketBookingSystem.Domain.Repositories
                             Id = int.Parse(parts[0]),
                             FlightId = int.Parse(parts[1]),
                             SeatClass = parts[5],
-                            passenger = _passenger,
+                            Passenger = _passenger,
                             BookDate = DateTime.Parse(parts[6])
                         };
                             
@@ -126,7 +126,7 @@ namespace AirportTicketBookingSystem.Domain.Repositories
             };
 
             lines.AddRange(_bookings.Select(b =>
-                $"{b.Id},{b.FlightId},{b.passenger.Id},{b.passenger.Name},{b.passenger.Email},{b.SeatClass},{b.BookDate}"
+                $"{b.Id},{b.FlightId},{b.Passenger.Id},{b.Passenger.Name},{b.Passenger.Email},{b.SeatClass},{b.BookDate}"
             ));
 
             File.WriteAllLines(_filePath, lines);

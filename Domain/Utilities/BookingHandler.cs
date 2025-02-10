@@ -17,7 +17,7 @@ namespace AirportTicketBookingSystem.Utilities
             _bookingService = new BookingService();
             _flightService = new FlightService();
             var LastBooking = _bookingService.GetLastBooking();
-            PassengerId = LastBooking?.passenger?.Id ?? 0;
+            PassengerId = LastBooking?.Passenger?.Id ?? 0;
             BookingId = LastBooking?.Id ?? 0;
         }
 
@@ -56,14 +56,14 @@ namespace AirportTicketBookingSystem.Utilities
             var booking = new Booking
             {
                 Id = ++BookingId,
-                passenger = passenger,
+                Passenger = passenger,
                 FlightId = flightId,
                 SeatClass = seatClass,
                 BookDate = DateTime.Now
             };
 
             _bookingService.AddBooking(booking);
-            Console.WriteLine($"Booking added successfully. Your ID is: {booking.passenger.Id}.");
+            Console.WriteLine($"Booking added successfully. Your ID is: {booking.Passenger.Id}.");
         }
 
 
