@@ -1,6 +1,7 @@
 ﻿using AirportTicketBookingSystem.Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.IO;
 
@@ -17,6 +18,22 @@ namespace AirportTicketBookingSystem.Domain.Services
             _filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath);
 
             Errors = new List<string>();
+        }
+
+
+        private bool ValidateModel(object model, out List<string> validationErrors)
+        {
+            var validationContext = new ValidationContext(model);
+            var results = new List<ValidationResult>();
+            validationErrors = new List<string>();
+
+            bool isValid = Validator.TryValidateObject(model, validationContext, results, true);
+            if (!isValid)
+            {
+                validationErrors = results.Select(r => r.ErrorMessage).ToList();
+            }
+
+            return isValid;
         }
 
         public List<Flight> ImportFlights()
@@ -65,6 +82,13 @@ namespace AirportTicketBookingSystem.Domain.Services
                             ArrivalAirport = parts[5],
                             Prices = prices
                         };
+
+                        List<string> validationErrors;
+                        if (!ValidateModel(flight, out validationErrors))
+                        {
+                            Errors.AddRange(validationErrors.Select(e => $"Invalid data at line {i + 1}: {e}"));
+                            continue;
+                        }
 
                         flights.Add(flight);
                     }
