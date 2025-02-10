@@ -122,15 +122,16 @@ namespace AirportTicketBookingSystem.Domain.Utilities
 
             var bookings = _bookingService.FilterBookings(maxPrice, departureCountry, destinationCountry, departureDate, departureAirport, arrivalAirport, passenger, seatClass);
 
+
             if (bookings.Any())
             {
                 Console.WriteLine("\nFiltered Bookings based on your search:");
-                foreach (var booking in bookings)
+                foreach (var (booking, flight) in bookings)
                 {
-                    var flight = _flightService.GetFlightById(booking.FlightId);
-                    double price = flight != null ? _flightService.GetPriceByClass(flight, booking.SeatClass) : 0.0;
+                    double bookingPrice = flight != null ? _flightService.GetPriceByClass(flight, booking.SeatClass) : 0.0;
 
-                    Console.WriteLine($"Booking ID: {booking.Id}, Passenger: {booking.Passenger.Name}, Flight ID: {booking.FlightId}, Seat Class: {booking.SeatClass}, Price: {price:C}");
+                    Console.WriteLine($"Booking ID: {booking.Id}, Passenger: {booking.Passenger.Name}, " +
+                                      $"Flight ID: {booking.FlightId}, Seat Class: {booking.SeatClass}, Price: {bookingPrice:C}");
                 }
             }
             else

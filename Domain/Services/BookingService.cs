@@ -82,7 +82,7 @@ namespace AirportTicketBookingSystem.Domain.Services
         }
 
 
-        public List<Booking> FilterBookings(
+        public List<(Booking Booking, Flight Flight)> FilterBookings(
         double? price = null,
         string departureCountry = null,
         string destinationCountry = null,
