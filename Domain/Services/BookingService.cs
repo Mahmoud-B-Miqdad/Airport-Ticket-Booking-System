@@ -102,32 +102,7 @@ namespace AirportTicketBookingSystem.Domain.Services
                 maxPrice: price
             );
 
-            var bookings = _bookingRepository.GetAllBookings();
-
-            // For Sure that the FilterBookings function is work
-            ////Console.WriteLine("\n\nFiltered Flights:");
-            ////foreach (var flight in filteredFlights)
-            ////{
-            ////    Console.WriteLine($"FlightId: {flight.Id}, Departure: {flight.DepartureCountry}, Destination: {flight.DestinationCountry}");
-            ////}
-
-            ////Console.WriteLine("All Bookings:");
-            ////foreach (var booking in bookings)
-            ////{
-            ////    Console.WriteLine($"Booking: {booking.Id}, FlightId: {booking.FlightId}, Passenger: {booking.Passenger.Name}, Class: {booking.SeatClass}");
-            ////}
-            ////Console.WriteLine("\n\n");
-
-
-            // Start Filtering
-            var filteredBookings = bookings.Where(b =>
-                filteredFlights.Any(f => f.Id == b.FlightId) &&
-                (price == null || _flightsService.GetPriceByClass(filteredFlights.FirstOrDefault(f => f.Id == b.FlightId), seatClass) <= price.Value) &&
-                (string.IsNullOrEmpty(passenger) || b.Passenger.Name.Equals(passenger, StringComparison.OrdinalIgnoreCase)) &&
-                (string.IsNullOrEmpty(seatClass) || b.SeatClass.Equals(seatClass, StringComparison.OrdinalIgnoreCase))
-            ).ToList();
-
-            return filteredBookings;
+            return _bookingRepository.FilteredBookings(filteredFlights, price, seatClass, passenger);
         }
     }
 }

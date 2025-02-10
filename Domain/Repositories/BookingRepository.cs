@@ -7,6 +7,8 @@ using System.IO;
 
 
 using AirportTicketBookingSystem.Domain.Models;
+using AirportTicketBookingSystem.Domain.Services;
+using System.Diagnostics;
 
 namespace AirportTicketBookingSystem.Domain.Repositories
 {
@@ -14,7 +16,7 @@ namespace AirportTicketBookingSystem.Domain.Repositories
     {
         private readonly string _filePath;
         private readonly List<Booking> _bookings;
-        
+        private readonly FlightService _flightsService;
 
         public BookingRepository()
         {
@@ -23,6 +25,7 @@ namespace AirportTicketBookingSystem.Domain.Repositories
 
 
             _bookings = new List<Booking>();
+            _flightsService = new FlightService();
 
             if (File.Exists(_filePath))
             {
@@ -116,6 +119,17 @@ namespace AirportTicketBookingSystem.Domain.Repositories
                     }
                 }
             }
+        }
+
+        public List<Booking> FilteredBookings(List<Flight> filteredFlights, double? price, string seatClass, string passenger)
+        {
+            var filteredBookings = _bookings.Where(b =>
+                filteredFlights.Any(f => f.Id == b.FlightId) &&
+                (price == null || _flightsService.GetPriceByClass(filteredFlights.FirstOrDefault(f => f.Id == b.FlightId), seatClass) <= price.Value) &&
+                (string.IsNullOrEmpty(passenger) || b.Passenger.Name.Equals(passenger, StringComparison.OrdinalIgnoreCase)) &&
+                (string.IsNullOrEmpty(seatClass) || b.SeatClass.Equals(seatClass, StringComparison.OrdinalIgnoreCase))).ToList();
+
+            return filteredBookings;
         }
 
         private void SaveBookings()
