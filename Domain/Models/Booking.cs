@@ -14,15 +14,6 @@ namespace AirportTicketBookingSystem.Domain.Models
         public string SeatClass { get; set; }
         public DateTime BookDate { get; set; }
 
-        //public Booking(int id, Passenger passenger, int flightid, string seatClass, DateTime bookDate)
-        //{
-        //    Id = id;
-        //    Passenger = passenger;
-        //    FlightId = flightid;
-        //    SeatClass = seatClass;
-        //    BookDate = bookDate;
-        //}
-
         public override string ToString()
         {
             return $"Booking {Id}: for {Passenger.Name} Passenger -> FlightId: {FlightId} Seat: [{SeatClass}] in ${BookDate:yyyy-MM-dd}";

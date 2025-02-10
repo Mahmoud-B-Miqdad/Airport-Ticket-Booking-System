@@ -16,21 +16,6 @@ namespace AirportTicketBookingSystem.Domain.Models
         public DateTime DepartureDate { get; set; }
         public Dictionary<string, double> Prices { get; set; } = new();
 
-        //public Flight(int id, string departureCountry, string destinationCountry,
-        //              string departureAirport, string arrivalAirport, DateTime departureDate,
-        //              double economyPrice, double businessPrice, double firstClassPrice)
-        //{
-        //    Id = id;
-        //    DepartureCountry = departureCountry;
-        //    DestinationCountry = destinationCountry;
-        //    DepartureAirport = departureAirport;
-        //    ArrivalAirport = arrivalAirport;
-        //    DepartureDate = departureDate;
-        //    EconomyPrice = economyPrice;
-        //    BusinessPrice = businessPrice;
-        //    FirstClassPrice = firstClassPrice;
-        //}
-
         public override string ToString()
         {
             return $"{Id}: {DepartureCountry} -> {DestinationCountry} | {DepartureDate:yyyy-MM-dd}";

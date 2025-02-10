@@ -6,24 +6,42 @@ using System.Threading.Tasks;
 
 using AirportTicketBookingSystem.Domain.Models;
 using AirportTicketBookingSystem.Domain.Repositories;
+using AirportTicketBookingSystem.Utilities;
 
 namespace AirportTicketBookingSystem.Domain.Services
 {
     public class BookingService
     {
         private readonly BookingRepository _bookingRepository;
-        private readonly FlightService _Flights;
-
+        private readonly FlightService _flightsService;
         public BookingService()
         {
             _bookingRepository = new BookingRepository();
-            _Flights = new FlightService();
+            _flightsService = new FlightService();
         }
 
-        public void AddBooking(Booking booking)
+        private void AddBooking(Booking booking)
         {
             _bookingRepository.AddBooking(booking);
             
+        }
+
+
+        public void BookFlight(int? flightId)
+        {
+            var passenger = InputHelper.GetPassengerInfo(++BookingHandler.PassengerId);
+            string seatClass = InputHelper.ValidateSeatClass();
+
+            var booking = new Booking
+            {
+                Id = ++BookingHandler.BookingId,
+                Passenger = passenger,
+                FlightId = flightId,
+                SeatClass = seatClass,
+                BookDate = DateTime.Now
+            };
+
+            AddBooking(booking);
         }
 
         public List<Booking> GetBookingsByPassenger(int passengerId)
@@ -74,7 +92,7 @@ namespace AirportTicketBookingSystem.Domain.Services
         string passenger = null,
         string seatClass = null)
         {
-            List<Flight> filteredFlights = _Flights.SearchFlights(
+            List<Flight> filteredFlights = _flightsService.SearchFlights(
                 departureCountry: departureCountry,
                 destinationCountry: destinationCountry,
                 departureAirport: departureAirport,
@@ -87,24 +105,24 @@ namespace AirportTicketBookingSystem.Domain.Services
             var bookings = _bookingRepository.GetAllBookings();
 
             // For Sure that the FilterBookings function is work
-            Console.WriteLine("\n\nFiltered Flights:");
-            foreach (var flight in filteredFlights)
-            {
-                Console.WriteLine($"FlightId: {flight.Id}, Departure: {flight.DepartureCountry}, Destination: {flight.DestinationCountry}");
-            }
+            ////Console.WriteLine("\n\nFiltered Flights:");
+            ////foreach (var flight in filteredFlights)
+            ////{
+            ////    Console.WriteLine($"FlightId: {flight.Id}, Departure: {flight.DepartureCountry}, Destination: {flight.DestinationCountry}");
+            ////}
 
-            Console.WriteLine("All Bookings:");
-            foreach (var booking in bookings)
-            {
-                Console.WriteLine($"Booking: {booking.Id}, FlightId: {booking.FlightId}, Passenger: {booking.Passenger.Name}, Class: {booking.SeatClass}");
-            }
-            Console.WriteLine("\n\n");
+            ////Console.WriteLine("All Bookings:");
+            ////foreach (var booking in bookings)
+            ////{
+            ////    Console.WriteLine($"Booking: {booking.Id}, FlightId: {booking.FlightId}, Passenger: {booking.Passenger.Name}, Class: {booking.SeatClass}");
+            ////}
+            ////Console.WriteLine("\n\n");
 
 
             // Start Filtering
             var filteredBookings = bookings.Where(b =>
                 filteredFlights.Any(f => f.Id == b.FlightId) &&
-                (price == null || _Flights.GetPriceByClass(filteredFlights.FirstOrDefault(f => f.Id == b.FlightId), seatClass) <= price.Value) &&
+                (price == null || _flightsService.GetPriceByClass(filteredFlights.FirstOrDefault(f => f.Id == b.FlightId), seatClass) <= price.Value) &&
                 (string.IsNullOrEmpty(passenger) || b.Passenger.Name.Equals(passenger, StringComparison.OrdinalIgnoreCase)) &&
                 (string.IsNullOrEmpty(seatClass) || b.SeatClass.Equals(seatClass, StringComparison.OrdinalIgnoreCase))
             ).ToList();

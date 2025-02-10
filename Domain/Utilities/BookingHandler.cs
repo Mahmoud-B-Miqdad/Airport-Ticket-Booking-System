@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using AirportTicketBookingSystem.Domain.Models;
 using AirportTicketBookingSystem.Domain.Services;
 
@@ -8,8 +9,8 @@ namespace AirportTicketBookingSystem.Utilities
     {
         private readonly BookingService _bookingService;
         private readonly FlightService _flightService;
-        private static int PassengerId;
-        private static int BookingId;
+        public static int PassengerId;
+        public static int BookingId;
 
 
         public BookingHandler()
@@ -30,7 +31,7 @@ namespace AirportTicketBookingSystem.Utilities
         public void BookFlight()
         {
             var flights = _flightService.GetAllFlights();
-            if (flights.Count == 0)
+            if (flights.Any())
             {
                 Console.WriteLine("No flights available.");
                 return;
@@ -50,20 +51,8 @@ namespace AirportTicketBookingSystem.Utilities
                 return;
             }
 
-            var passenger = InputHelper.GetPassengerInfo(++PassengerId);
-            string seatClass = InputHelper.ValidateSeatClass();
-
-            var booking = new Booking
-            {
-                Id = ++BookingId,
-                Passenger = passenger,
-                FlightId = flightId,
-                SeatClass = seatClass,
-                BookDate = DateTime.Now
-            };
-
-            _bookingService.AddBooking(booking);
-            Console.WriteLine($"Booking added successfully. Your ID is: {booking.Passenger.Id}.");
+            _bookingService.BookFlight(flightId);
+            Console.WriteLine($"Booking added successfully. Your ID is: {PassengerId}.");
         }
 
 
