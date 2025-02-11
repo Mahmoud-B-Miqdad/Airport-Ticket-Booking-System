@@ -77,7 +77,7 @@ namespace AirportTicketBookingSystem.Domain.Repositories
             var existingBooking = GetBookingById(updatedBooking.Id);
             if (existingBooking != null)
             {
-                existingBooking.FlightId = updatedBooking.FlightId;
+                existingBooking.Flight.Id = updatedBooking.Flight.Id;
                 existingBooking.SeatClass = updatedBooking.SeatClass;
                 SaveBookings();
             }
@@ -100,12 +100,15 @@ namespace AirportTicketBookingSystem.Domain.Repositories
                             Email = parts[4]
                         };
 
-
+                        var flight = new Flight
+                        {
+                            Id = int.Parse(parts[1]),
+                        };
 
                         var booking = new Booking
                         {
                             Id = int.Parse(parts[0]),
-                            FlightId = int.Parse(parts[1]),
+                            Flight = flight,
                             SeatClass = parts[5],
                             Passenger = _passenger,
                             BookDate = DateTime.Parse(parts[6])
@@ -125,7 +128,7 @@ namespace AirportTicketBookingSystem.Domain.Repositories
        List<Flight> filteredFlights, double? price, string seatClass, string passenger)
         {
             var filteredBookings = (from b in _bookings
-                                    join f in filteredFlights on b.FlightId equals f.Id
+                                    join f in filteredFlights on b.Flight.Id equals f.Id
                                     where (price == null || _flightsService.GetPriceByClass(f, seatClass) <= price.Value) &&
                                           (string.IsNullOrEmpty(passenger) || b.Passenger.Name.Equals(passenger, StringComparison.OrdinalIgnoreCase)) &&
                                           (string.IsNullOrEmpty(seatClass) || b.SeatClass.Equals(seatClass, StringComparison.OrdinalIgnoreCase))
@@ -145,7 +148,7 @@ namespace AirportTicketBookingSystem.Domain.Repositories
             };
 
             lines.AddRange(_bookings.Select(b =>
-                $"{b.Id},{b.FlightId},{b.Passenger.Id},{b.Passenger.Name},{b.Passenger.Email},{b.SeatClass},{b.BookDate}"
+                $"{b.Id},{b.Flight.Id},{b.Passenger.Id},{b.Passenger.Name},{b.Passenger.Email},{b.SeatClass},{b.BookDate}"
             ));
 
             File.WriteAllLines(_filePath, lines);

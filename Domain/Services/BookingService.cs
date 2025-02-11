@@ -30,11 +30,15 @@ namespace AirportTicketBookingSystem.Domain.Services
         public void BookFlight(int? flightId,Passenger passenger, string seatClass)
         {
 
+            var flight = new Flight
+            {
+                Id = flightId
+            };
             var booking = new Booking
             {
                 Id = ++BookingHandler.BookingId,
                 Passenger = passenger,
-                FlightId = flightId,
+                Flight = flight,
                 SeatClass = seatClass,
                 BookDate = DateTime.Now
             };
@@ -72,7 +76,7 @@ namespace AirportTicketBookingSystem.Domain.Services
                 return;
             }
 
-            booking.FlightId = newFlightId;
+            booking.Flight.Id = newFlightId;
             booking.SeatClass = newSeatClass;
             _bookingRepository.UpdateBooking(booking);
 

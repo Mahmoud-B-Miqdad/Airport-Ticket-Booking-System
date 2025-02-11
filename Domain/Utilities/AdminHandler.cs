@@ -131,7 +131,7 @@ namespace AirportTicketBookingSystem.Domain.Utilities
                     double bookingPrice = flight != null ? _flightService.GetPriceByClass(flight, booking.SeatClass) : 0.0;
 
                     Console.WriteLine($"Booking ID: {booking.Id}, Passenger: {booking.Passenger.Name}, " +
-                                      $"Flight ID: {booking.FlightId}, Seat Class: {booking.SeatClass}, Price: {bookingPrice:C}");
+                                      $"Flight ID: {booking.Flight.Id}, Seat Class: {booking.SeatClass}, Price: {bookingPrice:C}");
                 }
             }
             else

@@ -6,7 +6,7 @@ namespace AirportTicketBookingSystem.Domain.Models
 {
     public class Flight
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         [Required(ErrorMessage = "Departure country is required.")]
         public string DepartureCountry { get; set; }

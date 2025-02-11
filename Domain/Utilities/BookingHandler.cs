@@ -89,7 +89,7 @@ namespace AirportTicketBookingSystem.Utilities
 
             foreach (var booking in bookings)
             {
-                Console.WriteLine($"ID: {booking.Id}, Flight ID: {booking.FlightId}, Class: {booking.SeatClass}, Date: {booking.BookDate}");
+                Console.WriteLine($"ID: {booking.Id}, Flight ID: {booking.Flight.Id}, Class: {booking.SeatClass}, Date: {booking.BookDate}");
             }
 
             Console.WriteLine("1. Cancel a Booking\n2. Modify a Booking\n3. Back to Main Menu");
