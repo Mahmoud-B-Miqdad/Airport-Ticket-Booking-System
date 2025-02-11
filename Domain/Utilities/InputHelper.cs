@@ -29,30 +29,21 @@ namespace AirportTicketBookingSystem.Utilities
             };
         }
 
-        public static string ValidateSeatClass()
+        public static SeatClass ValidateSeatClass()
         {
-            string seatClass = "";
             while (true)
             {
-                Console.Write("Class (Economy, Business, First Class): ");
-                seatClass = Console.ReadLine().Trim();
+                Console.Write("Class (Economy, Business, FirstClass): ");
+                string input = Console.ReadLine().Trim();
 
-                if (seatClass == "")
-                {
-                    Console.WriteLine("Invalid class. Please enter 'Economy', 'Business', or 'First Class'.");
-                    continue;
-                }
-
-                if (string.IsNullOrEmpty(seatClass) ||
-                    seatClass.Equals("Economy", StringComparison.OrdinalIgnoreCase) ||
-                    seatClass.Equals("Business", StringComparison.OrdinalIgnoreCase) ||
-                    seatClass.Equals("First Class", StringComparison.OrdinalIgnoreCase))
+                if (Enum.TryParse(input, true, out SeatClass seatClass) && Enum.IsDefined(typeof(SeatClass), seatClass))
                 {
                     return seatClass;
                 }
-                Console.WriteLine("Invalid class. Please enter 'Economy', 'Business', or 'First Class'.");
-            }
 
+                Console.WriteLine("Invalid class. Please enter 'Economy', 'Business', or 'FirstClass'.");
+            }
         }
+
     }
 }

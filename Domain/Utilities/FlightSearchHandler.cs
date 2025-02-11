@@ -32,7 +32,7 @@ namespace AirportTicketBookingSystem.Utilities
             string dateInput = Console.ReadLine()?.Trim();
             DateTime? departureDate = string.IsNullOrEmpty(dateInput) ? null : DateTime.Parse(dateInput);
 
-            string seatClass = InputHelper.ValidateSeatClass();
+            SeatClass seatClass = InputHelper.ValidateSeatClass();
 
             Console.Write("Enter Maximum Price or leave empty: ");
             string priceInput = Console.ReadLine()?.Trim();
@@ -45,7 +45,7 @@ namespace AirportTicketBookingSystem.Utilities
                 Console.WriteLine("\nAvailable Flights based on your search:");
                 foreach (var flight in flights)
                 {
-                    Console.WriteLine($"Flight ID: {flight.Id}, From {flight.DepartureCountry} ({flight.DepartureAirport}) to {flight.DestinationCountry} ({flight.ArrivalAirport}), Date: {flight.DepartureDate}, Price: {flight.Prices[seatClass.ToLower()]:C}");
+                    Console.WriteLine($"Flight ID: {flight.Id}, From {flight.DepartureCountry} ({flight.DepartureAirport}) to {flight.DestinationCountry} ({flight.ArrivalAirport}), Date: {flight.DepartureDate}, Price: {flight.Prices[seatClass.ToString().ToLower()]:C}");
                 }
             }
             else

@@ -52,7 +52,7 @@ namespace AirportTicketBookingSystem.Utilities
             }
 
             var passenger = InputHelper.GetPassengerInfo(++BookingHandler.PassengerId);
-            string seatClass = InputHelper.ValidateSeatClass();
+            SeatClass seatClass = InputHelper.ValidateSeatClass();
 
             _bookingService.BookFlight(flightId, passenger, seatClass);
             Console.WriteLine($"Booking added successfully. Your ID is: {PassengerId}.");
@@ -70,7 +70,7 @@ namespace AirportTicketBookingSystem.Utilities
         {
             int modifyId = InputHelper.GetIntegerInput("Enter booking ID to modify:") ?? 0;
             int flightId = InputHelper.GetIntegerInput("Enter new Flight ID:") ?? 0;
-            string newClass = InputHelper.ValidateSeatClass();
+            SeatClass newClass = InputHelper.ValidateSeatClass();
             _bookingService.ModifyBooking(modifyId, flightId, newClass);
             Console.WriteLine($"Booking ID {modifyId} has been updated successfully.");
         }

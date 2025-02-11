@@ -27,7 +27,7 @@ namespace AirportTicketBookingSystem.Domain.Services
         }
 
 
-        public void BookFlight(int? flightId,Passenger passenger, string seatClass)
+        public void BookFlight(int? flightId,Passenger passenger, SeatClass seatClass)
         {
 
             var flight = new Flight
@@ -67,7 +67,7 @@ namespace AirportTicketBookingSystem.Domain.Services
             return _bookingRepository.GetLastBooking();
         }
 
-        public void ModifyBooking(int bookingId, int newFlightId, string newSeatClass)
+        public void ModifyBooking(int bookingId, int newFlightId, SeatClass newSeatClass)
         {
             var booking = _bookingRepository.GetBookingById(bookingId);
             if (booking == null)
@@ -91,7 +91,7 @@ namespace AirportTicketBookingSystem.Domain.Services
         string departureAirport = null,
         string arrivalAirport = null,
         string passenger = null,
-        string seatClass = null)
+        SeatClass? seatClass = null)
         {
             List<Flight> filteredFlights = _flightsService.SearchFlights(
                 departureCountry: departureCountry,

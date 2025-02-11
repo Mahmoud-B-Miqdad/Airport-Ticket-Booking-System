@@ -1,4 +1,5 @@
-﻿using AirportTicketBookingSystem.Domain.Services;
+﻿using AirportTicketBookingSystem.Domain.Models;
+using AirportTicketBookingSystem.Domain.Services;
 using AirportTicketBookingSystem.Utilities;
 using System;
 using System.Collections.Generic;
@@ -114,7 +115,7 @@ namespace AirportTicketBookingSystem.Domain.Utilities
             Console.Write("Enter Passenger Name or leave empty: ");
             string passenger = Console.ReadLine()?.Trim();
 
-            string seatClass = InputHelper.ValidateSeatClass();
+            SeatClass seatClass = InputHelper.ValidateSeatClass();
 
             Console.Write("Enter Maximum Price or leave empty: ");
             string priceInput = Console.ReadLine()?.Trim();

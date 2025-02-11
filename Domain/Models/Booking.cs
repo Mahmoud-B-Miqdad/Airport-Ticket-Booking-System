@@ -11,7 +11,7 @@ namespace AirportTicketBookingSystem.Domain.Models
         public int Id { get; set; }
         public Flight Flight { get; set; }
         public Passenger Passenger { get; set; }
-        public string SeatClass { get; set; }
+        public SeatClass? SeatClass { get; set; }
         public DateTime BookDate { get; set; }
 
         public override string ToString()

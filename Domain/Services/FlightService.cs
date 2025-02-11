@@ -29,7 +29,7 @@ namespace AirportTicketBookingSystem.Domain.Services
             string departureAirport = "",
             string arrivalAirport = "",
             DateTime? departureDate = null,
-            string seatClass = "",
+            SeatClass? seatClass = null,
             double? maxPrice = null)
         {
             var flights = _flightRepository.GetAllFlights();
@@ -39,7 +39,12 @@ namespace AirportTicketBookingSystem.Domain.Services
                 (string.IsNullOrEmpty(departureAirport) || f.DepartureAirport.Equals(departureAirport, StringComparison.OrdinalIgnoreCase)) &&
                 (string.IsNullOrEmpty(arrivalAirport) || f.ArrivalAirport.Equals(arrivalAirport, StringComparison.OrdinalIgnoreCase)) &&
                 (!departureDate.HasValue || f.DepartureDate.Date == departureDate.Value.Date) &&
-                (maxPrice == null || GetPriceByClass(f, seatClass) <= maxPrice.Value)
+                (maxPrice == null || (seatClass != null && Enum.TryParse(seatClass.ToString(), out SeatClass seatClassEnum) ?
+                GetPriceByClass(f, (SeatClass?)seatClassEnum) : GetPriceByClass(f, null)) <= maxPrice.Value)
+
+
+
+
             ).ToList();
         }
 
@@ -53,9 +58,9 @@ namespace AirportTicketBookingSystem.Domain.Services
             return _flightRepository.GetFlightById(flightId);
         }
 
-        public double GetPriceByClass(Flight flight, string seatClass)
+        public double GetPriceByClass(Flight flight, SeatClass? seatClass)
         {
-            if (flight.Prices.TryGetValue(seatClass.ToLower(), out double price))
+            if (flight.Prices.TryGetValue(seatClass.ToString().ToLower(), out double price))
             {
                 return price;
             }
