@@ -8,8 +8,8 @@ namespace AirportTicketBookingSystem.Domain.Models
 {
     public enum SeatClass
     {
-        Economy,
-        Business,
-        FirstClass
+        Economy = 0,
+        Business = 1,
+        FirstClass = 0
     }
 }

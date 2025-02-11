@@ -41,10 +41,6 @@ namespace AirportTicketBookingSystem.Domain.Services
                 (!departureDate.HasValue || f.DepartureDate.Date == departureDate.Value.Date) &&
                 (maxPrice == null || (seatClass != null && Enum.TryParse(seatClass.ToString(), out SeatClass seatClassEnum) ?
                 GetPriceByClass(f, (SeatClass?)seatClassEnum) : GetPriceByClass(f, null)) <= maxPrice.Value)
-
-
-
-
             ).ToList();
         }
 

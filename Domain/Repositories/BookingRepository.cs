@@ -20,18 +20,26 @@ namespace AirportTicketBookingSystem.Domain.Repositories
 
         public BookingRepository()
         {
-            string relativePath = @"Data\bookings.csv";
-            _filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath);
-
-
-            _bookings = new List<Booking>();
-            _flightsService = new FlightService();
-
-            if (File.Exists(_filePath))
+            try
             {
-                LoadBookings();
+                string relativePath = @"Data\bookings.csv";
+                _filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath);
+
+                _bookings = new List<Booking>();
+                _flightsService = new FlightService();
+
+                if (File.Exists(_filePath))
+                {
+                    LoadBookings();
+                    Console.WriteLine("Bookings loaded successfully.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error initializing BookingRepository: {ex.Message}");
             }
         }
+
 
         public void AddBooking(Booking booking)
         {
@@ -54,11 +62,9 @@ namespace AirportTicketBookingSystem.Domain.Repositories
             var booking = GetBookingById(bookingId);
             if (booking == null)
             {
-                Console.WriteLine($"Booking ID {bookingId} Not Found.");
-                return;
+                throw new KeyNotFoundException($"Booking ID {bookingId} Not Found.");
             }
             _bookings.Remove(booking);
-            Console.WriteLine($"Booking for {bookingId} canceled successfully.");
             SaveBookings();
         }
 
@@ -118,7 +124,7 @@ namespace AirportTicketBookingSystem.Domain.Repositories
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Error in loading the trip: {ex.Message}");
+                        throw new Exception($"Error loading bookings: {ex.Message}", ex);
                     }
                 }
             }
@@ -137,9 +143,6 @@ namespace AirportTicketBookingSystem.Domain.Repositories
 
             return filteredBookings;
         }
-
-
-
 
         private void SaveBookings()
         {

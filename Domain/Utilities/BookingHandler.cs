@@ -62,8 +62,22 @@ namespace AirportTicketBookingSystem.Utilities
         private void CancelBooking()
         {
             int cancelId = InputHelper.GetIntegerInput("Enter booking ID to cancel:") ?? 0;
-            _bookingService.CancelBooking(cancelId);
+
+            try
+            {
+                _bookingService.CancelBooking(cancelId);
+                Console.WriteLine($"Booking for {cancelId} canceled successfully.");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while canceling the booking: {ex.Message}");
+            }
         }
+
 
 
         private void ModifyBooking()
