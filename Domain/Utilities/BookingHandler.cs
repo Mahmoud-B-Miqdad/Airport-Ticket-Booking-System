@@ -31,7 +31,7 @@ namespace AirportTicketBookingSystem.Utilities
         public void BookFlight()
         {
             var flights = _flightService.GetAllFlights();
-            if (flights.Any())
+            if (!flights.Any())
             {
                 Console.WriteLine("No flights available.");
                 return;
@@ -51,7 +51,10 @@ namespace AirportTicketBookingSystem.Utilities
                 return;
             }
 
-            _bookingService.BookFlight(flightId);
+            var passenger = InputHelper.GetPassengerInfo(++BookingHandler.PassengerId);
+            string seatClass = InputHelper.ValidateSeatClass();
+
+            _bookingService.BookFlight(flightId, passenger, seatClass);
             Console.WriteLine($"Booking added successfully. Your ID is: {PassengerId}.");
         }
 
@@ -69,6 +72,7 @@ namespace AirportTicketBookingSystem.Utilities
             int flightId = InputHelper.GetIntegerInput("Enter new Flight ID:") ?? 0;
             string newClass = InputHelper.ValidateSeatClass();
             _bookingService.ModifyBooking(modifyId, flightId, newClass);
+            Console.WriteLine($"Booking ID {modifyId} has been updated successfully.");
         }
 
 

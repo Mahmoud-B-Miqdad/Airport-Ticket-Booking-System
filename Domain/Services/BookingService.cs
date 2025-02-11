@@ -27,10 +27,8 @@ namespace AirportTicketBookingSystem.Domain.Services
         }
 
 
-        public void BookFlight(int? flightId)
+        public void BookFlight(int? flightId,Passenger passenger, string seatClass)
         {
-            var passenger = InputHelper.GetPassengerInfo(++BookingHandler.PassengerId);
-            string seatClass = InputHelper.ValidateSeatClass();
 
             var booking = new Booking
             {
@@ -78,7 +76,6 @@ namespace AirportTicketBookingSystem.Domain.Services
             booking.SeatClass = newSeatClass;
             _bookingRepository.UpdateBooking(booking);
 
-            Console.WriteLine($"Booking ID {bookingId} has been updated successfully.");
         }
 
 
