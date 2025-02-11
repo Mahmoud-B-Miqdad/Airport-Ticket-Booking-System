@@ -114,9 +114,22 @@ namespace AirportTicketBookingSystem.Utilities
                 case "1":
                     CancelBooking();
                     break;
+
                 case "2":
-                    ModifyBooking();
+                    try
+                    {
+                        ModifyBooking();
+                    }
+                    catch (KeyNotFoundException ex)
+                    {
+                        Console.WriteLine($"Error: {ex.Message}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                    }
                     break;
+
                 case "3":
                     return;
                 default:

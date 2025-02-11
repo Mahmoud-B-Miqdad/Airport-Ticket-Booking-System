@@ -115,7 +115,7 @@ namespace AirportTicketBookingSystem.Domain.Repositories
                         {
                             Id = int.Parse(parts[0]),
                             Flight = flight,
-                            SeatClass = Enum.TryParse(parts[5], true, out SeatClass seatClassEnum) ? (SeatClass?)seatClassEnum : null,
+                            SeatClass = Enum.TryParse(parts[5], true, out SeatClass seatClassEnum) ? seatClassEnum : SeatClass.None,
                             Passenger = _passenger,
                             BookDate = DateTime.Parse(parts[6])
                         };
@@ -131,7 +131,7 @@ namespace AirportTicketBookingSystem.Domain.Repositories
         }
 
         public List<(Booking Booking, Flight Flight)> FilteredBookings(
-    List<Flight> filteredFlights, double? price, SeatClass? seatClass, string passenger)
+    List<Flight> filteredFlights, double? price, SeatClass seatClass, string passenger)
         {
             var filteredBookings = (from b in _bookings
                                     join f in filteredFlights on b.Flight.Id equals f.Id

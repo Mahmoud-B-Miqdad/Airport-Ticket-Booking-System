@@ -72,8 +72,7 @@ namespace AirportTicketBookingSystem.Domain.Services
             var booking = _bookingRepository.GetBookingById(bookingId);
             if (booking == null)
             {
-                Console.WriteLine("Booking not found.");
-                return;
+                throw new KeyNotFoundException($"Booking with ID {bookingId} not found.");
             }
 
             booking.Flight.Id = newFlightId;
@@ -91,7 +90,7 @@ namespace AirportTicketBookingSystem.Domain.Services
         string departureAirport = null,
         string arrivalAirport = null,
         string passenger = null,
-        SeatClass? seatClass = null)
+        SeatClass seatClass = SeatClass.None)
         {
             List<Flight> filteredFlights = _flightsService.SearchFlights(
                 departureCountry: departureCountry,

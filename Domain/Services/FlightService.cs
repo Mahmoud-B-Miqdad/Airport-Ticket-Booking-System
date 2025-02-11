@@ -39,8 +39,8 @@ namespace AirportTicketBookingSystem.Domain.Services
                 (string.IsNullOrEmpty(departureAirport) || f.DepartureAirport.Equals(departureAirport, StringComparison.OrdinalIgnoreCase)) &&
                 (string.IsNullOrEmpty(arrivalAirport) || f.ArrivalAirport.Equals(arrivalAirport, StringComparison.OrdinalIgnoreCase)) &&
                 (!departureDate.HasValue || f.DepartureDate.Date == departureDate.Value.Date) &&
-                (maxPrice == null || (seatClass != null && Enum.TryParse(seatClass.ToString(), out SeatClass seatClassEnum) ?
-                GetPriceByClass(f, (SeatClass?)seatClassEnum) : GetPriceByClass(f, null)) <= maxPrice.Value)
+                (maxPrice == null || (Enum.TryParse(seatClass.ToString(), out SeatClass seatClassEnum) ?
+                GetPriceByClass(f, seatClassEnum) : GetPriceByClass(f, SeatClass.None)) <= maxPrice.Value)
             ).ToList();
         }
 
@@ -54,7 +54,7 @@ namespace AirportTicketBookingSystem.Domain.Services
             return _flightRepository.GetFlightById(flightId);
         }
 
-        public double GetPriceByClass(Flight flight, SeatClass? seatClass)
+        public double GetPriceByClass(Flight flight, SeatClass seatClass)
         {
             if (flight.Prices.TryGetValue(seatClass.ToString().ToLower(), out double price))
             {
