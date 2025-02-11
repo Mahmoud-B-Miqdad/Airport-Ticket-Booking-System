@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using AirportTicketBookingSystem.Domain.Models;
 using AirportTicketBookingSystem.Domain.Repositories;
+using AirportTicketBookingSystem.Domain.Utilities;
 
 namespace AirportTicketBookingSystem.Domain.Services
 {
@@ -39,8 +40,9 @@ namespace AirportTicketBookingSystem.Domain.Services
                 (string.IsNullOrEmpty(departureAirport) || f.DepartureAirport.Equals(departureAirport, StringComparison.OrdinalIgnoreCase)) &&
                 (string.IsNullOrEmpty(arrivalAirport) || f.ArrivalAirport.Equals(arrivalAirport, StringComparison.OrdinalIgnoreCase)) &&
                 (!departureDate.HasValue || f.DepartureDate.Date == departureDate.Value.Date) &&
-                (maxPrice == null || (Enum.TryParse(seatClass.ToString(), out SeatClass seatClassEnum) ?
-                GetPriceByClass(f, seatClassEnum) : GetPriceByClass(f, SeatClass.None)) <= maxPrice.Value)
+                (maxPrice == null || (seatClass.ToString().ParseEnum(SeatClass.None) != SeatClass.None ?
+                GetPriceByClass(f, seatClass.ToString().ParseEnum(SeatClass.None)) : GetPriceByClass(f, SeatClass.None)) <= maxPrice.Value)
+
             ).ToList();
         }
 

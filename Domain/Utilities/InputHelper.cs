@@ -1,5 +1,6 @@
 ﻿using System;
 using AirportTicketBookingSystem.Domain.Models;
+using AirportTicketBookingSystem.Domain.Utilities;
 
 namespace AirportTicketBookingSystem.Utilities
 {
@@ -36,7 +37,8 @@ namespace AirportTicketBookingSystem.Utilities
                 Console.Write("Class (Economy, Business, FirstClass): ");
                 string input = Console.ReadLine().Trim();
 
-                if (Enum.TryParse(input, true, out SeatClass seatClass) && Enum.IsDefined(typeof(SeatClass), seatClass))
+                SeatClass seatClass = input.ParseEnum(SeatClass.None);
+                if (seatClass != SeatClass.None)
                 {
                     return seatClass;
                 }

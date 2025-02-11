@@ -9,6 +9,7 @@ using System.IO;
 using AirportTicketBookingSystem.Domain.Models;
 using AirportTicketBookingSystem.Domain.Services;
 using System.Diagnostics;
+using AirportTicketBookingSystem.Domain.Utilities;
 
 namespace AirportTicketBookingSystem.Domain.Repositories
 {
@@ -115,7 +116,7 @@ namespace AirportTicketBookingSystem.Domain.Repositories
                         {
                             Id = int.Parse(parts[0]),
                             Flight = flight,
-                            SeatClass = Enum.TryParse(parts[5], true, out SeatClass seatClassEnum) ? seatClassEnum : SeatClass.None,
+                            SeatClass = parts[5].ParseEnum(SeatClass.None),
                             Passenger = _passenger,
                             BookDate = DateTime.Parse(parts[6])
                         };
