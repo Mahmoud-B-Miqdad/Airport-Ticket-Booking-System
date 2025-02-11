@@ -122,20 +122,19 @@ namespace AirportTicketBookingSystem.Domain.Repositories
         }
 
         public List<(Booking Booking, Flight Flight)> FilteredBookings(
-               List<Flight> filteredFlights, double? price, string seatClass, string passenger)
+       List<Flight> filteredFlights, double? price, string seatClass, string passenger)
         {
-            var filteredBookings = _bookings
-                .Where(b =>
-                    filteredFlights.Any(f => f.Id == b.FlightId) &&
-                    (price == null || _flightsService.GetPriceByClass(
-                        filteredFlights.FirstOrDefault(f => f.Id == b.FlightId), seatClass) <= price.Value) &&
-                    (string.IsNullOrEmpty(passenger) || b.Passenger.Name.Equals(passenger, StringComparison.OrdinalIgnoreCase)) &&
-                    (string.IsNullOrEmpty(seatClass) || b.SeatClass.Equals(seatClass, StringComparison.OrdinalIgnoreCase)))
-                .Select(b => (Booking: b, Flight: filteredFlights.FirstOrDefault(f => f.Id == b.FlightId)))  
-                .ToList();
+            var filteredBookings = (from b in _bookings
+                                    join f in filteredFlights on b.FlightId equals f.Id
+                                    where (price == null || _flightsService.GetPriceByClass(f, seatClass) <= price.Value) &&
+                                          (string.IsNullOrEmpty(passenger) || b.Passenger.Name.Equals(passenger, StringComparison.OrdinalIgnoreCase)) &&
+                                          (string.IsNullOrEmpty(seatClass) || b.SeatClass.Equals(seatClass, StringComparison.OrdinalIgnoreCase))
+                                    select (Booking: b, Flight: f))
+                                    .ToList();
 
             return filteredBookings;
         }
+
 
 
         private void SaveBookings()
