@@ -32,12 +32,11 @@ namespace AirportTicketBookingSystem.Domain.Repositories
                 if (File.Exists(_filePath))
                 {
                     LoadBookings();
-                    Console.WriteLine("Bookings loaded successfully.");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error initializing BookingRepository: {ex.Message}");
+                throw new Exception($"Error parsing Booling data: {ex.Message}", ex);
             }
         }
 

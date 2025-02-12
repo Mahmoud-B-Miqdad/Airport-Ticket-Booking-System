@@ -16,7 +16,14 @@ namespace AirportTicketBookingSystem.Domain.Services
 
         public FlightService()
         {
-            _flightRepository = new FlightRepository();
+            try
+            {
+                _flightRepository = new FlightRepository();
+            }
+            catch(ApplicationException ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
 
         public void AddFlight(Flight flight)

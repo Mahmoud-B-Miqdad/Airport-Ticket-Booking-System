@@ -16,7 +16,15 @@ namespace AirportTicketBookingSystem.Domain.Services
         private readonly FlightService _flightsService;
         public BookingService()
         {
-            _bookingRepository = new BookingRepository();
+            try
+            {
+                _bookingRepository = new BookingRepository();
+            }
+            catch (ApplicationException ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+
             _flightsService = new FlightService();
         }
 

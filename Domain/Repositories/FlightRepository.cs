@@ -17,15 +17,22 @@ namespace AirportTicketBookingSystem.Domain.Repositories
         public FlightRepository()
         {
 
-            string relativePath = @"Data\flights.csv";
-            _filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath);
-
-            _flights = new List<Flight>();
-
-            if (File.Exists(_filePath))
-
+            try
             {
-                LoadFlights();
+                string relativePath = @"Data\flights.csv";
+                _filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath);
+
+                _flights = new List<Flight>();
+
+                if (File.Exists(_filePath))
+
+                {
+                    LoadFlights();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error parsing flight data: {ex.Message}", ex);
             }
         }
 
@@ -76,7 +83,7 @@ namespace AirportTicketBookingSystem.Domain.Repositories
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Error in loading the trip: {ex.Message}");
+                        throw new Exception($"Error loading flights: {ex.Message}", ex);
                     }
                 }
             }
