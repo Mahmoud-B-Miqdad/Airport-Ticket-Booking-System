@@ -1,4 +1,5 @@
 ﻿using AirportTicketBookingSystem.Domain.Models;
+using AirportTicketBookingSystem.Domain.Repositories;
 using AirportTicketBookingSystem.Domain.Services;
 using AirportTicketBookingSystem.Utilities;
 using System;
@@ -18,8 +19,16 @@ namespace AirportTicketBookingSystem.Domain.Utilities
 
         public AdminHandler()
         {
-            _bookingService = new BookingService();
-            _flightService = new FlightService();
+            try
+            {
+                _bookingService = new BookingService();
+                _flightService = new FlightService();
+            }
+            catch (ApplicationException ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+
             _csvFlightImporter = new CSVFlightImporter();
         }
 

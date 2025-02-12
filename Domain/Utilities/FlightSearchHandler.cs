@@ -11,7 +11,14 @@ namespace AirportTicketBookingSystem.Utilities
 
         public FlightSearchHandler()
         {
-            _flightService = new FlightService();
+            try
+            {
+                _flightService = new FlightService();
+            }
+            catch (ApplicationException ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
         }
 
         public void SearchAndDisplayFlights()

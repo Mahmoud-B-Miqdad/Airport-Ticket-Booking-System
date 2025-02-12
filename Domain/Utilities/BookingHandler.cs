@@ -15,8 +15,16 @@ namespace AirportTicketBookingSystem.Utilities
 
         public BookingHandler()
         {
-            _bookingService = new BookingService();
-            _flightService = new FlightService();
+            try
+            {
+                _bookingService = new BookingService();
+                _flightService = new FlightService();
+            }
+            catch (ApplicationException ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+
             var LastBooking = _bookingService.GetLastBooking();
             PassengerId = LastBooking?.Passenger?.Id ?? 0;
             BookingId = LastBooking?.Id ?? 0;
