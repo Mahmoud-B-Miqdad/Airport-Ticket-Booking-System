@@ -26,7 +26,8 @@ namespace AirportTicketBookingSystem.Domain.Utilities
             }
             catch (ApplicationException ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"\nError: {ex.Message} Please check the flight data file and correct any errors before running the program again.");
+                Environment.Exit(1);
             }
 
             _csvFlightImporter = new CSVFlightImporter();

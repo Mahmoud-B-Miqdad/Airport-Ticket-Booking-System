@@ -19,15 +19,17 @@ namespace AirportTicketBookingSystem.Utilities
             {
                 _bookingService = new BookingService();
                 _flightService = new FlightService();
+                var LastBooking = _bookingService.GetLastBooking();
+                PassengerId = LastBooking?.Passenger?.Id ?? 0;
+                BookingId = LastBooking?.Id ?? 0;
             }
             catch (ApplicationException ex)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"\nError: {ex.Message} Please check the flight data file and correct any errors before running the program again.");
+                Environment.Exit(1);
             }
 
-            var LastBooking = _bookingService.GetLastBooking();
-            PassengerId = LastBooking?.Passenger?.Id ?? 0;
-            BookingId = LastBooking?.Id ?? 0;
+            
         }
 
         private void ReadKey()
