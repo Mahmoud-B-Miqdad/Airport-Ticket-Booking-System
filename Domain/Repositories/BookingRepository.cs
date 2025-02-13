@@ -36,7 +36,7 @@ namespace AirportTicketBookingSystem.Domain.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error parsing Booling data: {ex.Message}", ex);
+                throw new ApplicationException($"\nError parsing Booking data: {ex.Message}", ex);
             }
         }
 
@@ -62,7 +62,7 @@ namespace AirportTicketBookingSystem.Domain.Repositories
             var booking = GetBookingById(bookingId);
             if (booking == null)
             {
-                throw new KeyNotFoundException($"Booking ID {bookingId} Not Found.");
+                throw new KeyNotFoundException($"\nBooking ID {bookingId} Not Found.");
             }
             _bookings.Remove(booking);
             SaveBookings();
@@ -124,7 +124,7 @@ namespace AirportTicketBookingSystem.Domain.Repositories
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception($"Error loading bookings: {ex.Message}", ex);
+                        throw new ApplicationException($"\nError loading bookings: {ex.Message}", ex);
                     }
                 }
             }

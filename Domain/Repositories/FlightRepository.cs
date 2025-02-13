@@ -32,7 +32,7 @@ namespace AirportTicketBookingSystem.Domain.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error parsing flight data: {ex.Message}", ex);
+                throw new ApplicationException($"\nError parsing flight data: {ex.Message}", ex);
             }
         }
 
@@ -83,7 +83,7 @@ namespace AirportTicketBookingSystem.Domain.Repositories
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception($"Error loading flights: {ex.Message}", ex);
+                        throw new ApplicationException($"\nError loading flights: {ex.Message}", ex);
                     }
                 }
             }
