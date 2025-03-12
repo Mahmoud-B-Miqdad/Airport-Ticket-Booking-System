@@ -9,7 +9,7 @@ using AirportTicketBookingSystem.Domain.Models;
 
 namespace AirportTicketBookingSystem.Domain.Repositories
 {
-    public class FlightRepository
+    public class FlightRepository : IFlightRepository
     {
         private readonly string _filePath;
         private readonly List<Flight> _flights;

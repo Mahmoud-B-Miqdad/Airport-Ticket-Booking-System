@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-
+ 
 
 using AirportTicketBookingSystem.Domain.Models;
 using AirportTicketBookingSystem.Domain.Services;
@@ -13,7 +13,7 @@ using AirportTicketBookingSystem.Domain.Utilities;
 
 namespace AirportTicketBookingSystem.Domain.Repositories
 {
-    public class BookingRepository
+    public class BookingRepository : IBookingRepository
     {
         private readonly string _filePath;
         private readonly List<Booking> _bookings;
