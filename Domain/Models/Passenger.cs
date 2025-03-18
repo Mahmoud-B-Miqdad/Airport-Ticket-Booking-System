@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace AirportTicketBookingSystem.Domain.Models;
 
-namespace AirportTicketBookingSystem.Domain.Models
+public class Passenger
 {
-    public class Passenger
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string Email { get; set; }
+    public override string ToString()
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Email { get; set; }
-        public override string ToString()
-        {
-            return $"{Id}: {Name} ({Email})";
-        }
+        return $"{Id}: {Name} ({Email})";
     }
 }
 

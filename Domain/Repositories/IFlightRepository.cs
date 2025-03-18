@@ -1,11 +1,10 @@
 ﻿using AirportTicketBookingSystem.Domain.Models;
 
-namespace AirportTicketBookingSystem.Domain.Repositories
+namespace AirportTicketBookingSystem.Domain.Repositories;
+
+public interface IFlightRepository
 {
-    public interface IFlightRepository
-    {
-        void AddFlight(Flight flight);
-        List<Flight> GetAllFlights();
-        Flight GetFlightById(int? flightId);
-    }
+    void AddFlight(Flight flight);
+    List<Flight> GetAllFlights();
+    Flight GetFlightById(int? flightId);
 }

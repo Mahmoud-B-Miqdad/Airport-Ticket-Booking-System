@@ -1,21 +1,19 @@
-﻿using AirportTicketBookingSystem.Domain.Models;
-using AirportTicketBookingSystem.Domain.Services;
-using System;
+﻿using AirportTicketBookingSystem.Domain.Utilities;
 
-namespace AirportTicketBookingSystem.Utilities
+namespace AirportTicketBookingSystem.Utilities;
+
+public class UserInteraction
 {
-    public class UserInteraction
+    private readonly MainMenuHandler _mainMenuHandler;
+
+    public UserInteraction
+        (BookingHandler bookingHandler, FlightSearchHandler flightSearchHandler, AdminHandler adminHandler)
     {
-        private readonly MainMenuHandler _mainMenuHandler;
+        _mainMenuHandler = new MainMenuHandler(bookingHandler, flightSearchHandler, adminHandler);
+    }
 
-        public UserInteraction()
-        {
-            _mainMenuHandler = new MainMenuHandler();
-        }
-
-        public void Start()
-        {
-            _mainMenuHandler.DisplayMainMenu();
-        }
+    public void Start()
+    {
+        _mainMenuHandler.DisplayMainMenu();
     }
 }

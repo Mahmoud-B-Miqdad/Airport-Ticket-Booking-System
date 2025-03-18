@@ -1,109 +1,104 @@
 ﻿using AirportTicketBookingSystem.Domain.Models;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
-using System.IO;
 
-namespace AirportTicketBookingSystem.Domain.Services
+namespace AirportTicketBookingSystem.Domain.Services;
+
+public class CSVFlightImporter
 {
-    public class CSVFlightImporter
+    private readonly string _filePath;
+    public List<string> Errors { get; private set; }
+
+    public CSVFlightImporter()
     {
-        private readonly string _filePath;
-        public List<string> Errors { get; private set; }
+        string relativePath = @"Data\flights.csv";
+        _filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath);
 
-        public CSVFlightImporter()
+        Errors = new List<string>();
+    }
+
+
+    private bool ValidateModel(object model, out List<string> validationErrors)
+    {
+        var validationContext = new ValidationContext(model);
+        var results = new List<ValidationResult>();
+        validationErrors = new List<string>();
+
+        bool isValid = Validator.TryValidateObject(model, validationContext, results, true);
+        if (!isValid)
         {
-            string relativePath = @"Data\flights.csv";
-            _filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, relativePath);
-
-            Errors = new List<string>();
+            validationErrors = results.Select(r => r.ErrorMessage).ToList();
         }
 
+        return isValid;
+    }
 
-        private bool ValidateModel(object model, out List<string> validationErrors)
+    public List<Flight> ImportFlights()
+    {
+        var flights = new List<Flight>();
+        Errors.Clear();
+
+        if (!File.Exists(_filePath))
         {
-            var validationContext = new ValidationContext(model);
-            var results = new List<ValidationResult>();
-            validationErrors = new List<string>();
-
-            bool isValid = Validator.TryValidateObject(model, validationContext, results, true);
-            if (!isValid)
-            {
-                validationErrors = results.Select(r => r.ErrorMessage).ToList();
-            }
-
-            return isValid;
+            Errors.Add("Flight data file not found in Resources folder.");
+            return flights;
         }
 
-        public List<Flight> ImportFlights()
+        try
         {
-            var flights = new List<Flight>();
-            Errors.Clear();
-
-            if (!File.Exists(_filePath))
+            var lines = File.ReadAllLines(_filePath);
+            for (int i = 1; i < lines.Length; i++) 
             {
-                Errors.Add("Flight data file not found in Resources folder.");
-                return flights;
-            }
+                var parts = lines[i].Split(',');
 
-            try
-            {
-                var lines = File.ReadAllLines(_filePath);
-                for (int i = 1; i < lines.Length; i++) 
+                if (parts.Length != 7)
                 {
-                    var parts = lines[i].Split(',');
+                    Errors.Add($"Invalid data at line {i + 1}: Incorrect number of columns.");
+                    continue;
+                }
 
-                    if (parts.Length != 7)
+                try
+                {
+
+                    var prices = parts[6]
+                        .Split('|')
+                        .Select(p => p.Split(':'))
+                        .ToDictionary(p => p[0], p => double.Parse(p[1]));
+
+                    var flight = new Flight
                     {
-                        Errors.Add($"Invalid data at line {i + 1}: Incorrect number of columns.");
+                        Id = int.Parse(parts[0]),
+                        DepartureCountry = parts[1],
+                        DestinationCountry = parts[2],
+                        DepartureDate = DateTime.Parse(parts[3]),
+
+                        /*this commint to be sure that List of error is work
+                        DepartureDate = DateTime.ParseExact(parts[3], "yyyy-MM-dd", CultureInfo.InvariantCulture),*/
+
+                        DepartureAirport = parts[4],
+                        ArrivalAirport = parts[5],
+                        Prices = prices
+                    };
+
+                    List<string> validationErrors;
+                    if (!ValidateModel(flight, out validationErrors))
+                    {
+                        Errors.AddRange(validationErrors.Select(e => $"Invalid data at line {i + 1}: {e}"));
                         continue;
                     }
 
-                    try
-                    {
-
-                        var prices = parts[6]
-                            .Split('|')
-                            .Select(p => p.Split(':'))
-                            .ToDictionary(p => p[0], p => double.Parse(p[1]));
-
-                        var flight = new Flight
-                        {
-                            Id = int.Parse(parts[0]),
-                            DepartureCountry = parts[1],
-                            DestinationCountry = parts[2],
-                            DepartureDate = DateTime.Parse(parts[3]),
-
-                            /*this commint to be sure that List of error is work
-                            DepartureDate = DateTime.ParseExact(parts[3], "yyyy-MM-dd", CultureInfo.InvariantCulture),*/
-
-                            DepartureAirport = parts[4],
-                            ArrivalAirport = parts[5],
-                            Prices = prices
-                        };
-
-                        List<string> validationErrors;
-                        if (!ValidateModel(flight, out validationErrors))
-                        {
-                            Errors.AddRange(validationErrors.Select(e => $"Invalid data at line {i + 1}: {e}"));
-                            continue;
-                        }
-
-                        flights.Add(flight);
-                    }
-                    catch (Exception ex)
-                    {
-                        Errors.Add($"Invalid data at line {i + 1}: {ex.Message}");
-                    }
+                    flights.Add(flight);
+                }
+                catch (Exception ex)
+                {
+                    Errors.Add($"Invalid data at line {i + 1}: {ex.Message}");
                 }
             }
-            catch (Exception ex)
-            {
-                Errors.Add($"Failed to read file: {ex.Message}");
-            }
-
-            return flights;
         }
+        catch (Exception ex)
+        {
+            Errors.Add($"Failed to read file: {ex.Message}");
+        }
+
+        return flights;
     }
 }
