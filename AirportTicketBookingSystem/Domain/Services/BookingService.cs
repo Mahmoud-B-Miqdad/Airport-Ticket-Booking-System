@@ -17,17 +17,16 @@ public class BookingService : IBookingService
     private void AddBooking(Booking booking)
     {
         _bookingRepository.AddBooking(booking);
-        
     }
 
 
     public void BookFlight(int? flightId,Passenger passenger, SeatClass seatClass)
     {
+        if(flightId == null)
+            throw new ArgumentNullException($"\nflightId Shoudnt be null");
 
-        var flight = new Flight
-        {
-            Id = flightId
-        };
+        var flight = new Flight { Id = flightId };
+
         var booking = new Booking
         {
             Id = ++BookingHandler.BookingId,

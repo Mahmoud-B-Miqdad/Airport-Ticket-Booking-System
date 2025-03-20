@@ -34,6 +34,11 @@ public class FlightRepository : IFlightRepository
 
     public void AddFlight(Flight flight)
     {
+        foreach (var f in _flights)
+        {
+            if (f.Id == flight.Id)
+                throw new InvalidOperationException($"\nBooking {flight.Id} already exists");
+        }
         _flights.Add(flight);
         SaveFlights();
     }

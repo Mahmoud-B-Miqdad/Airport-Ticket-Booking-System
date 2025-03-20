@@ -36,12 +36,20 @@ public class BookingRepository : IBookingRepository
 
     public void AddBooking(Booking booking)
     {
+        foreach (var b in _bookings)
+        {
+            if (b.Id == booking.Id)
+                throw new InvalidOperationException($"\nBooking {booking.Id} already exists");
+        }
         _bookings.Add(booking);
         SaveBookings();
     }
 
     public List<Booking> GetBookingsByPassenger(int passengerId)
     {
+        if (passengerId <= 0)
+            throw new ArgumentException("Invalid passenger ID");
+
         return _bookings.Where(b => b.Passenger.Id == passengerId).ToList(); 
     }
 
@@ -68,18 +76,22 @@ public class BookingRepository : IBookingRepository
 
     public Booking GetLastBooking()
     {
-        return _bookings.Last();
+        if (_bookings.Count > 0)
+            return _bookings.Last();
+        else
+            return null;
     }
 
     public void UpdateBooking(Booking updatedBooking)
     {
         var existingBooking = GetBookingById(updatedBooking.Id);
-        if (existingBooking != null)
+        if (existingBooking == null)
         {
-            existingBooking.Flight.Id = updatedBooking.Flight.Id;
-            existingBooking.SeatClass = updatedBooking.SeatClass;
-            SaveBookings();
+            throw new KeyNotFoundException($"\nBooking ID {updatedBooking.Id} Not Found.");
         }
+        existingBooking.Flight.Id = updatedBooking.Flight.Id;
+        existingBooking.SeatClass = updatedBooking.SeatClass;
+        SaveBookings();
     }
 
     private void LoadBookings()
