@@ -55,6 +55,6 @@ public class FlightService : IFlightService
         {
             return price;
         }
-        return flight.Prices.ContainsKey("c") ? flight.Prices["economy"] : 0; 
+        return flight.Prices.ContainsKey("economy") ? flight.Prices["economy"] : 0; 
     }
 }
