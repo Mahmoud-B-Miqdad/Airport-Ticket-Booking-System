@@ -3,19 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-<<<<<<< HEAD
-<<<<<<< HEAD
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirportTicketBookingSystem", "AirportTicketBookingSystem.csproj", "{DC704E31-B792-41A2-B7D5-D86C03A51C00}"
-=======
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirportTicketBookingSystem.Tests", "AirportTicketBookingSystem.Tests\AirportTicketBookingSystem.Tests.csproj", "{58D0CF57-154C-4D9A-B975-9C5056BA2E1C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirportTicketBookingSystem", "AirportTicketBookingSystem\AirportTicketBookingSystem.csproj", "{9CA73553-75D9-4945-BC97-1DB2A6546338}"
->>>>>>> 7cc16f4 ( Refactor Project Structure – Moved AirportTicketBookingSystem.Tests outside the main project and updated solution paths for proper project reference.)
-=======
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirportTicketBookingSystem", "AirportTicketBookingSystem.csproj", "{DC704E31-B792-41A2-B7D5-D86C03A51C00}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AirportTicketBookingSystem.Tests", "AirportTicketBookingSystem.Tests\AirportTicketBookingSystem.Tests.csproj", "{58D0CF57-154C-4D9A-B975-9C5056BA2E1C}"
->>>>>>> 415e107 (Add Unit Test Project & Complete BookingRepository Tests)
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirportTicketBookingSystem", "AirportTicketBookingSystem\AirportTicketBookingSystem.csproj", "{306E8D44-68E1-47B2-AF45-BC6DFEECABC4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,27 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-<<<<<<< HEAD
-		{DC704E31-B792-41A2-B7D5-D86C03A51C00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DC704E31-B792-41A2-B7D5-D86C03A51C00}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DC704E31-B792-41A2-B7D5-D86C03A51C00}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DC704E31-B792-41A2-B7D5-D86C03A51C00}.Release|Any CPU.Build.0 = Release|Any CPU
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 415e107 (Add Unit Test Project & Complete BookingRepository Tests)
 		{58D0CF57-154C-4D9A-B975-9C5056BA2E1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{58D0CF57-154C-4D9A-B975-9C5056BA2E1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58D0CF57-154C-4D9A-B975-9C5056BA2E1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58D0CF57-154C-4D9A-B975-9C5056BA2E1C}.Release|Any CPU.Build.0 = Release|Any CPU
-<<<<<<< HEAD
-		{9CA73553-75D9-4945-BC97-1DB2A6546338}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9CA73553-75D9-4945-BC97-1DB2A6546338}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9CA73553-75D9-4945-BC97-1DB2A6546338}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9CA73553-75D9-4945-BC97-1DB2A6546338}.Release|Any CPU.Build.0 = Release|Any CPU
->>>>>>> 7cc16f4 ( Refactor Project Structure – Moved AirportTicketBookingSystem.Tests outside the main project and updated solution paths for proper project reference.)
-=======
->>>>>>> 415e107 (Add Unit Test Project & Complete BookingRepository Tests)
+		{306E8D44-68E1-47B2-AF45-BC6DFEECABC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{306E8D44-68E1-47B2-AF45-BC6DFEECABC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{306E8D44-68E1-47B2-AF45-BC6DFEECABC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{306E8D44-68E1-47B2-AF45-BC6DFEECABC4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
