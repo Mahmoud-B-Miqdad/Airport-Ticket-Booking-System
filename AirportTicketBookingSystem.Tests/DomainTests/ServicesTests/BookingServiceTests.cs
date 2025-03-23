@@ -131,7 +131,7 @@ public class BookingServiceTests
     [Fact]
     public void GetLastBooking_ShouldReturnNull_WhenNoBookingsExist()
     {
-        _mockBookingRepo.Setup(repo => repo.GetLastBooking()).Returns((Booking)null);
+        _mockBookingRepo.Setup(repo => repo.GetLastBooking()).Returns((Booking?)null);
 
         var result = _bookingService.GetLastBooking();
 
@@ -160,7 +160,7 @@ public class BookingServiceTests
         int bookingId = _fixture.Create<int>();
         int newFlightId = _fixture.Create<int>();
         var newSeatClass = _fixture.Create<SeatClass>();
-        _mockBookingRepo.Setup(repo => repo.GetBookingById(bookingId)).Returns((Booking)null);
+        _mockBookingRepo.Setup(repo => repo.GetBookingById(bookingId)).Returns((Booking?)null);
 
         Action act = () => _bookingService.ModifyBooking(bookingId, newFlightId, newSeatClass);
 

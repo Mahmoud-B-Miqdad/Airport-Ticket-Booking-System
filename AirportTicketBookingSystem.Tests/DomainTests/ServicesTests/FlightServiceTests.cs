@@ -76,7 +76,7 @@ public class FlightServiceTests
     public void GetFlightById_ShouldReturnNull_WhenFlightDoesNotExist()
     {
         int invalidId = _fixture.Create<int>();
-        _mockFlightRepo.Setup(repo => repo.GetFlightById(invalidId)).Returns((Flight)null);
+        _mockFlightRepo.Setup(repo => repo.GetFlightById(invalidId)).Returns((Flight?)null);
 
         var result = _flightService.GetFlightById(invalidId);
 
