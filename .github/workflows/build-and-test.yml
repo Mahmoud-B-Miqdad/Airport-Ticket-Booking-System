@@ -6,15 +6,20 @@ on:
       - main  
       - develop 
       - test-project 
+    paths:
+      - '**.cs'
+      - '**.csproj'
 
   pull_request:
     branches:
       - main  
       - develop  
-      
     paths:
-    - '**.cs'
-    - '**.csproj'
+      - '**.cs'
+      - '**.csproj'
+
+  workflow_dispatch:
+
 
 env:
   DOTNET_VERSION: '8.0.x' # The .NET SDK version to use
