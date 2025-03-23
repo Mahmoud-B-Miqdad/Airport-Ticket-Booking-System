@@ -20,7 +20,6 @@ on:
 
   workflow_dispatch:
 
-
 env:
   DOTNET_VERSION: '8.0.x' # The .NET SDK version to use
 
@@ -35,6 +34,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v3
       with:
@@ -42,7 +42,10 @@ jobs:
 
     - name: Install dependencies
       run: dotnet restore
-      
+
+    - name: Verify Installed Packages
+      run: dotnet list package  # 👈 تحقق من تحميل Newtonsoft.Json وجميع المكتبات
+
     - name: Build
       run: dotnet build --configuration Release --no-restore
     
