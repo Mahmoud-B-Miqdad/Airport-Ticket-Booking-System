@@ -18,12 +18,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\AirportTicketBookingSystem\AirportTicketBookingSystem.csproj" />
-
-  </ItemGroup>
-
+	<ItemGroup>
+		<ProjectReference Include="..\AirportTicketBookingSystem\AirportTicketBookingSystem.csproj" />
+	</ItemGroup>
   <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
