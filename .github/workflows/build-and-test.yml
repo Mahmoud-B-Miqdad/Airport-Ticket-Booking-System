@@ -53,6 +53,7 @@ jobs:
 
     - name: Build
       run: dotnet build --configuration Release --no-restore
-
+  
     - name: Test
-      run: dotnet test --no-restore --verbosity quiet || exit 0
+      run: |
+        if dotnet test --no-restore --verbosity normal; then exit 0; else exit 1; fi
