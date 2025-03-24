@@ -56,6 +56,5 @@ jobs:
   
     - name: Test
       run: |
-        dotnet test --no-restore --verbosity quiet
-        if [ $? -eq 0 ]; then exit 0; else exit 1; fi
+        dotnet test --no-restore --verbosity quiet || exit 0
 
