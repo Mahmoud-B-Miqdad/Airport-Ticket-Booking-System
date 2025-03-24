@@ -56,5 +56,9 @@ jobs:
   
     - name: Test
       run: |
-        dotnet test --no-restore --verbosity quiet || exit 0
+        if [ "$(uname)" == "Darwin" ] || [ "$(uname)" == "Linux" ]; then
+          dotnet test --no-restore --verbosity normal || exit 0
+        elif [ "$OS" == "Windows_NT" ]; then
+          dotnet test --no-restore --verbosity normal || exit 0
+        fi
 
