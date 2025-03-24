@@ -44,6 +44,10 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
 
+    - name: Verify .NET SDK version
+      run: dotnet --version 
+
+
     - name: Verify Installed Packages
       run: dotnet list package 
 
@@ -51,4 +55,4 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Test
-      run: dotnet test --no-restore --verbosity detailed  
+      run: dotnet test --no-restore --verbosity quiet  
