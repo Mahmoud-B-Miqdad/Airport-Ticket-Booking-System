@@ -56,7 +56,6 @@ jobs:
   
     - name: Test
       run: |
-        dotnet test --no-restore --verbosity normal
-        if ($LASTEXITCODE -ne 0) { exit 0 }
+        dotnet test --no-restore --verbosity normal || exit 0
 
 
