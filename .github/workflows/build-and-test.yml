@@ -55,6 +55,6 @@ jobs:
   
     - name: Test
       run: |
-        dotnet test --no-restore --verbosity normal || exit 0
+        dotnet test --no-restore --verbosity normal
 
 
