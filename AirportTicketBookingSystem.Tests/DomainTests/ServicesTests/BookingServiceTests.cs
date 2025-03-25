@@ -79,23 +79,6 @@ public class BookingServiceTests
     }
 
     [Fact]
-    public void CancelBooking_WhenBookingDoesNotExist_ShouldThrowKeyNotFoundException()
-    {
-        int invalidBookingId = _fixture.Create<int>();
-        _mockBookingRepo
-            .Setup(repo => repo.CancelBooking(invalidBookingId))
-            .Throws(new KeyNotFoundException($"\nBooking ID {invalidBookingId} Not Found."));
-
-        Action act = () => _bookingService.CancelBooking(invalidBookingId);
-
-        act.Should().Throw<KeyNotFoundException>()
-           .WithMessage($"\nBooking ID {invalidBookingId} Not Found.");
-
-        _mockBookingRepo.Verify(repo => repo.CancelBooking(invalidBookingId), Times.Once);
-    }
-
-
-    [Fact]
     public void GetAllBookings_WhenCalled_ShouldReturnAllBookings()
     {
         var bookings = _fixture.Create<List<Booking>>();

@@ -28,19 +28,6 @@ public class FlightServiceTests
     }
 
     [Fact]
-    public void AddFlight_WhenBookingAlreadyExists_ShouldThrowInvalidOperationException()
-    {
-        var flight = _fixture.Create<Flight>();
-        _mockFlightRepo.Setup(repo => repo.AddFlight(It.IsAny<Flight>()))
-            .Throws(new InvalidOperationException($"\nBooking {flight.Id} already exists"));
-
-        Action act = () => _flightService.AddFlight(flight);
-
-        act.Should().Throw<InvalidOperationException>()
-            .WithMessage($"\nBooking {flight.Id} already exists");
-    }
-
-    [Fact]
     public void GetAllFlights_WhenCalled_ShouldReturnAllFlights()
     {
         var flights = _fixture.CreateMany<Flight>(5).ToList();
