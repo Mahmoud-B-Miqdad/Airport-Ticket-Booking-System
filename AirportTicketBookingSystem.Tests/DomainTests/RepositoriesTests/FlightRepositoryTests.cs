@@ -5,18 +5,18 @@ using AirportTicketBookingSystem.Domain.Utilities;
 using AutoFixture;
 using FluentAssertions;
 
-public class FlightRepositoryTests
+public class FlightRepositoryTests : IDisposable
 {
-    private readonly FakeFileHandler _fileHandler;
+    private readonly FakeFileHandler _fileStorage;
     private readonly Fixture _fixture;
     private readonly FlightRepository _flightRepository;
 
     public FlightRepositoryTests()
     {
-        _fileHandler = new FakeFileHandler();
+        _fileStorage = new FakeFileHandler();
         _fixture = new Fixture();
 
-        _flightRepository = new FlightRepository(_fileHandler);
+        _flightRepository = new FlightRepository(_fileStorage);
     }
 
     [Fact]
@@ -114,6 +114,14 @@ public class FlightRepositoryTests
         var result = _flightRepository.SearchFlights(departureCountry: "Mars");
 
         result.Should().BeEmpty();
+    }
+
+    public void Dispose()
+    {
+        if (_fileStorage is FakeFileHandler fakeFileHandler)
+        {
+            fakeFileHandler.DeleteFile("test-file");
+        }
     }
 
 }

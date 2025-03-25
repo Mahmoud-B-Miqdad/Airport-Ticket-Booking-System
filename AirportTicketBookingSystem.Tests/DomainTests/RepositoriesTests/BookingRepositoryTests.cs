@@ -8,7 +8,7 @@ using AirportTicketBookingSystem.Domain.Services;
 using AirportTicketBookingSystem.Domain.Utilities;
 using AirportTicketBookingSystem.Domain.Massages;
 
-public class BookingRepositoryTests
+public class BookingRepositoryTests : IDisposable
 {
     private readonly Fixture _fixture;
     private readonly IFileHandler _fileStorage;
@@ -200,5 +200,13 @@ public class BookingRepositoryTests
 
         act.Should().Throw<KeyNotFoundException>()
             .WithMessage(string.Format(ErrorMessages.BookingNotFound, updatedBooking.Id));
+    }
+
+    public void Dispose()
+    {
+        if (_fileStorage is FakeFileHandler fakeFileHandler)
+        {
+            fakeFileHandler.DeleteFile("test-file");
+        }
     }
 }

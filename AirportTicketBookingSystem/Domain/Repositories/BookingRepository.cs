@@ -51,7 +51,7 @@ public class BookingRepository : IBookingRepository
         if (passengerId <= 0)
             throw new ArgumentException(string.Format(ErrorMessages.InvalidPassengerID, passengerId));
 
-        return _bookings.Where(b => b.Passenger.Id == passengerId).ToList(); 
+        return _bookings.Where(b => b.Passenger.Id == passengerId).ToList();
     }
 
     public Booking GetBookingById(int bookingId)
@@ -125,7 +125,7 @@ public class BookingRepository : IBookingRepository
                         Passenger = _passenger,
                         BookDate = DateTime.Parse(parts[6])
                     };
-                        
+
                     _bookings.Add(booking);
                 }
                 catch (Exception ex)
@@ -136,8 +136,8 @@ public class BookingRepository : IBookingRepository
         }
     }
 
-    public List<(Booking Booking, Flight Flight)> FilteredBookings(
-List<Flight> filteredFlights, double? price, SeatClass seatClass, string passenger)
+    public List<(Booking Booking, Flight Flight)> FilteredBookings(List<Flight> filteredFlights,
+        double? price, SeatClass seatClass, string passenger)
     {
         var filteredBookings = (from b in _bookings
                                 join f in filteredFlights on b.Flight.Id equals f.Id
@@ -152,7 +152,7 @@ List<Flight> filteredFlights, double? price, SeatClass seatClass, string passeng
 
     private void SaveBookings()
     {
-        
+
         var lines = new List<string>
         {
             FileHeaders.BookingHeader

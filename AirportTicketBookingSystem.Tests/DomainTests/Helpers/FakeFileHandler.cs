@@ -15,4 +15,12 @@ public class FakeFileHandler : IFileHandler
 
         _files[DEFAULT_PATH] = lines.ToList();
     }
+
+    public void DeleteFile(string path)
+    {
+        if (_files.ContainsKey(DEFAULT_PATH))
+        {
+            _files.Remove(DEFAULT_PATH);
+        }
+    }
 }
