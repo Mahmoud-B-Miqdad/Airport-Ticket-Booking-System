@@ -30,6 +30,15 @@ public class Flight
         return $"{Id}: {DepartureCountry} -> {DestinationCountry} | {DepartureDate:yyyy-MM-dd}";
     }
 
+    public double GetPriceByClass(SeatClass seatClass)
+    {
+        if (Prices.TryGetValue(seatClass.ToString().ToLower(), out double price))
+        {
+            return price;
+        }
+        return Prices.ContainsKey("economy") ? Prices["economy"] : 0;
+    }
+
     public static ValidationResult ValidateDepartureDate(DateTime departureDate, ValidationContext context)
     {
         return departureDate >= DateTime.Today

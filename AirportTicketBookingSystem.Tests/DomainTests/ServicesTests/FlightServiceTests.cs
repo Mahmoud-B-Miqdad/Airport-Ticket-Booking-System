@@ -71,36 +71,31 @@ public class FlightServiceTests
     }
 
     [Fact]
-    public void SearchFlights_WhenFlightsMatchCriteria_ShouldReturnMatchingFlights()
+    public void SearchFlights_ShouldCallRepositorySearchFlights_WithCorrectParameters()
     {
-        var flights = _fixture.CreateMany<Flight>(10).ToList();
-        var targetFlight = flights.First();
-        targetFlight.DepartureCountry = "USA";
-        _mockFlightRepo.Setup(repo => repo.GetAllFlights()).Returns(flights);
+        string departureCountry = "USA";
+        string destinationCountry = "UK";
+        string departureAirport = "JFK";
+        string arrivalAirport = "LHR";
+        DateTime? departureDate = new DateTime(2025, 5, 10);
+        SeatClass? seatClass = SeatClass.Business;
+        double? maxPrice = 500.0;
 
-        var result = _flightService.SearchFlights(departureCountry: "USA");
+        _flightService.SearchFlights(departureCountry, destinationCountry, departureAirport,
+                                     arrivalAirport, departureDate, seatClass, maxPrice);
 
-        result.Should().ContainSingle(f => f.DepartureCountry == "USA");
+        _mockFlightRepo.Verify(repo => repo.SearchFlights(departureCountry, destinationCountry,
+            departureAirport, arrivalAirport, departureDate, seatClass, maxPrice), Times.Once);
     }
 
-    [Fact]
-    public void SearchFlights_WhenNoMatch_ShouldReturnEmptyList()
-    {
-        var flights = _fixture.CreateMany<Flight>(5).ToList();
-        _mockFlightRepo.Setup(repo => repo.GetAllFlights()).Returns(flights);
 
-        var result = _flightService.SearchFlights(departureCountry: "Mars");
-
-        result.Should().BeEmpty();
-    }
-
-    [Fact]
+[Fact]
     public void GetPriceByClass_WhenSeatClassExists_ShouldReturnCorrectPrice()
     {
         var flight = _fixture.Create<Flight>();
         flight.Prices["business"] = 500.0;
 
-        var price = _flightService.GetPriceByClass(flight, SeatClass.Business);
+        var price = flight.GetPriceByClass(SeatClass.Business);
 
         price.Should().Be(500.0);
     }
@@ -111,7 +106,7 @@ public class FlightServiceTests
         var flight = _fixture.Create<Flight>();
         //flight.Prices["economy"] = 200.0;
 
-        var price = _flightService.GetPriceByClass(flight, SeatClass.Business);
+        var price = flight.GetPriceByClass(SeatClass.Business);
 
         price.Should().Be(0.0);
         //price.Should().Be(200.0);

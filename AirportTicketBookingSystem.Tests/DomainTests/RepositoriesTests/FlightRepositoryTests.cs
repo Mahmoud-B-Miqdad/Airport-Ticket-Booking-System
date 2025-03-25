@@ -82,4 +82,37 @@ public class FlightRepositoryTests
 
         retrievedFlight.Should().BeNull();
     }
+
+    [Fact]
+    public void SearchFlights_WhenFlightsMatchCriteria_ShouldReturnMatchingFlights()
+    {
+        var flights = _fixture.CreateMany<Flight>(10).ToList();
+        var targetFlight = flights.First();
+        targetFlight.DepartureCountry = "USA";
+
+        foreach (var flight in flights)
+        {
+            _flightRepository.AddFlight(flight);
+        }
+
+        var result = _flightRepository.SearchFlights(departureCountry: "USA");
+
+        result.Should().ContainSingle(f => f.DepartureCountry == "USA");
+    }
+
+    [Fact]
+    public void SearchFlights_WhenNoMatch_ShouldReturnEmptyList()
+    {
+        var flights = _fixture.CreateMany<Flight>(5).ToList();
+
+        foreach (var flight in flights)
+        {
+            _flightRepository.AddFlight(flight);
+        }
+
+        var result = _flightRepository.SearchFlights(departureCountry: "Mars");
+
+        result.Should().BeEmpty();
+    }
+
 }

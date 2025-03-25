@@ -53,6 +53,25 @@ public class FlightRepository : IFlightRepository
         return _flights.FirstOrDefault(f => f.Id == flightId);
     }
 
+    public List<Flight> SearchFlights(
+       string departureCountry = "",
+       string destinationCountry = "",
+       string departureAirport = "",
+       string arrivalAirport = "",
+       DateTime? departureDate = null,
+       SeatClass? seatClass = null,
+       double? maxPrice = null)
+    {
+        return _flights.Where(f =>
+            (string.IsNullOrEmpty(departureCountry) || f.DepartureCountry.Equals(departureCountry, StringComparison.OrdinalIgnoreCase)) &&
+            (string.IsNullOrEmpty(destinationCountry) || f.DestinationCountry.Equals(destinationCountry, StringComparison.OrdinalIgnoreCase)) &&
+            (string.IsNullOrEmpty(departureAirport) || f.DepartureAirport.Equals(departureAirport, StringComparison.OrdinalIgnoreCase)) &&
+            (string.IsNullOrEmpty(arrivalAirport) || f.ArrivalAirport.Equals(arrivalAirport, StringComparison.OrdinalIgnoreCase)) &&
+            (!departureDate.HasValue || f.DepartureDate.Date == departureDate.Value.Date) &&
+            (maxPrice == null || f.GetPriceByClass(seatClass ?? SeatClass.None) <= maxPrice.Value)
+        ).ToList();
+    }
+
     private void LoadFlights()
     {
         var lines = _fileStorage.ReadAllLines(_filePath);

@@ -140,7 +140,7 @@ List<Flight> filteredFlights, double? price, SeatClass seatClass, string passeng
     {
         var filteredBookings = (from b in _bookings
                                 join f in filteredFlights on b.Flight.Id equals f.Id
-                                where (price == null || _flightsService.GetPriceByClass(f, seatClass) <= price.Value) &&
+                                where (price == null || f.GetPriceByClass(seatClass) <= price.Value) &&
                                       (string.IsNullOrEmpty(passenger) || b.Passenger.Name.Equals(passenger, StringComparison.OrdinalIgnoreCase)) &&
                                       (seatClass == null || b.SeatClass == seatClass)
                                 select (Booking: b, Flight: f))
