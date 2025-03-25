@@ -121,7 +121,7 @@ public class BookingRepositoryTests
     public void CancelBooking_WhenBookingNotFound_ShouldThrowException()
     {
         Action act = () => _bookingRepository.CancelBooking(999);
-        act.Should().Throw<KeyNotFoundException>().WithMessage(string.Format(ErrorMessages.BookingNotFound, bookingId));
+        act.Should().Throw<KeyNotFoundException>().WithMessage(string.Format(ErrorMessages.BookingNotFound, 999));
     }
 
     [Fact]
