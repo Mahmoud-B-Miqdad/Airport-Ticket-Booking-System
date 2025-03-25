@@ -1,4 +1,5 @@
-﻿using AirportTicketBookingSystem.Domain.Models;
+﻿using AirportTicketBookingSystem.Domain.Massages;
+using AirportTicketBookingSystem.Domain.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace AirportTicketBookingSystem.Domain.Services;
@@ -39,7 +40,7 @@ public class CSVFlightImporter
 
         if (!File.Exists(_filePath))
         {
-            Errors.Add("Flight data file not found in Resources folder.");
+            Errors.Add(ErrorMessages.FlightDataFileNotFound);
             return flights;
         }
 
@@ -52,7 +53,7 @@ public class CSVFlightImporter
 
                 if (parts.Length != 7)
                 {
-                    Errors.Add($"Invalid data at line {i + 1}: Incorrect number of columns.");
+                    Errors.Add(string.Format(ErrorMessages.InvalidDataColumnCount, i + 1));
                     continue;
                 }
 
@@ -82,7 +83,7 @@ public class CSVFlightImporter
                     List<string> validationErrors;
                     if (!ValidateModel(flight, out validationErrors))
                     {
-                        Errors.AddRange(validationErrors.Select(e => $"Invalid data at line {i + 1}: {e}"));
+                        Errors.AddRange(validationErrors.Select(e => string.Format(ErrorMessages.InvalidData, i + 1, e)));
                         continue;
                     }
 
@@ -90,13 +91,13 @@ public class CSVFlightImporter
                 }
                 catch (Exception ex)
                 {
-                    Errors.Add($"Invalid data at line {i + 1}: {ex.Message}");
+                    Errors.Add(string.Format(ErrorMessages.InvalidData, i + 1, ex.Message));
                 }
             }
         }
         catch (Exception ex)
         {
-            Errors.Add($"Failed to read file: {ex.Message}");
+            Errors.Add(string.Format(ErrorMessages.FileReadFailure, ex.Message));
         }
 
         return flights;

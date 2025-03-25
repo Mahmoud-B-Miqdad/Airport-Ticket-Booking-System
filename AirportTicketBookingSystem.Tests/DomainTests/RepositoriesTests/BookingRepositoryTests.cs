@@ -6,6 +6,7 @@ using AirportTicketBookingSystem.Domain.Models;
 using AirportTicketBookingSystem.Domain.Repositories;
 using AirportTicketBookingSystem.Domain.Services;
 using AirportTicketBookingSystem.Domain.Utilities;
+using AirportTicketBookingSystem.Domain.Massages;
 
 public class BookingRepositoryTests
 {
@@ -44,7 +45,7 @@ public class BookingRepositoryTests
         Action act = () => _bookingRepository.AddBooking(booking);
 
         act.Should().Throw<InvalidOperationException>()
-            .WithMessage($"\nBooking {booking.Id} already exists");
+            .WithMessage(string.Format(ErrorMessages.BookingAlreadyExists, booking.Id));
     }
 
     [Fact]
@@ -79,7 +80,7 @@ public class BookingRepositoryTests
     public void GetBookingsByPassenger_WhenPassengerIdIsInvalid_ShouldThrowException(int invalidPassengerId)
     {
         Action act = () => _bookingRepository.GetBookingsByPassenger(invalidPassengerId);
-        act.Should().Throw<ArgumentException>().WithMessage("Invalid passenger ID");
+        act.Should().Throw<ArgumentException>().WithMessage(string.Format(ErrorMessages.InvalidPassengerID, invalidPassengerId));
     }
 
     [Fact]
@@ -120,7 +121,7 @@ public class BookingRepositoryTests
     public void CancelBooking_WhenBookingNotFound_ShouldThrowException()
     {
         Action act = () => _bookingRepository.CancelBooking(999);
-        act.Should().Throw<KeyNotFoundException>().WithMessage($"\nBooking ID {999} Not Found.");
+        act.Should().Throw<KeyNotFoundException>().WithMessage(string.Format(ErrorMessages.BookingNotFound, bookingId));
     }
 
     [Fact]
@@ -198,6 +199,6 @@ public class BookingRepositoryTests
         Action act = () => _bookingRepository.UpdateBooking(updatedBooking);
 
         act.Should().Throw<KeyNotFoundException>()
-            .WithMessage($"\nBooking ID {updatedBooking.Id} Not Found.");
+            .WithMessage(string.Format(ErrorMessages.BookingNotFound, updatedBooking.Id));
     }
 }

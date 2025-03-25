@@ -1,4 +1,5 @@
-﻿using AirportTicketBookingSystem.Domain.Models;
+﻿using AirportTicketBookingSystem.Domain.Massages;
+using AirportTicketBookingSystem.Domain.Models;
 using AirportTicketBookingSystem.Domain.Services;
 using AirportTicketBookingSystem.Domain.Utilities;
 
@@ -29,7 +30,7 @@ public class BookingRepository : IBookingRepository
         }
         catch (Exception ex)
         {
-            throw new ApplicationException($"\nError parsing Booking data: {ex.Message}", ex);
+            throw new ApplicationException(string.Format(ErrorMessages.BookingDataParseError, ex.Message), ex);
         }
     }
 
@@ -39,7 +40,7 @@ public class BookingRepository : IBookingRepository
         foreach (var b in _bookings)
         {
             if (b.Id == booking.Id)
-                throw new InvalidOperationException($"\nBooking {booking.Id} already exists");
+                throw new InvalidOperationException(string.Format(ErrorMessages.BookingAlreadyExists, booking.Id));
         }
         _bookings.Add(booking);
         SaveBookings();
@@ -48,7 +49,7 @@ public class BookingRepository : IBookingRepository
     public List<Booking> GetBookingsByPassenger(int passengerId)
     {
         if (passengerId <= 0)
-            throw new ArgumentException("Invalid passenger ID");
+            throw new ArgumentException(string.Format(ErrorMessages.InvalidPassengerID, passengerId));
 
         return _bookings.Where(b => b.Passenger.Id == passengerId).ToList(); 
     }
@@ -63,7 +64,7 @@ public class BookingRepository : IBookingRepository
         var booking = GetBookingById(bookingId);
         if (booking == null)
         {
-            throw new KeyNotFoundException($"\nBooking ID {bookingId} Not Found.");
+            throw new KeyNotFoundException(string.Format(ErrorMessages.BookingNotFound, bookingId));
         }
         _bookings.Remove(booking);
         SaveBookings();
@@ -87,7 +88,7 @@ public class BookingRepository : IBookingRepository
         var existingBooking = GetBookingById(updatedBooking.Id);
         if (existingBooking == null)
         {
-            throw new KeyNotFoundException($"\nBooking ID {updatedBooking.Id} Not Found.");
+            throw new KeyNotFoundException(string.Format(ErrorMessages.BookingNotFound, updatedBooking.Id));
         }
         existingBooking.Flight.Id = updatedBooking.Flight.Id;
         existingBooking.SeatClass = updatedBooking.SeatClass;
@@ -129,7 +130,7 @@ public class BookingRepository : IBookingRepository
                 }
                 catch (Exception ex)
                 {
-                    throw new ApplicationException($"\nError loading bookings: {ex.Message}", ex);
+                    throw new ApplicationException(string.Format(ErrorMessages.ErrorLoadingBookings, ex.Message), ex);
                 }
             }
         }
@@ -151,9 +152,10 @@ List<Flight> filteredFlights, double? price, SeatClass seatClass, string passeng
 
     private void SaveBookings()
     {
+        
         var lines = new List<string>
         {
-            "Id,FlightId,PassengerId,PassengerName,PassengerEmail,Class,BookDate"
+            FileHeaders.BookingHeader
         };
 
         lines.AddRange(_bookings.Select(b =>

@@ -101,17 +101,25 @@ public class BookingHandler
     public void ManageBookings()
     {
         int passengerId = InputHelper.GetIntegerInput("Enter your passenger ID:") ?? 0;
-        var bookings = _bookingService.GetBookingsByPassenger(passengerId);
-
-        if (bookings == null || bookings.Count == 0)
+        try
         {
-            Console.WriteLine("No bookings found.");
-            return;
+            var bookings = _bookingService.GetBookingsByPassenger(passengerId);
+
+            if (bookings == null || bookings.Count == 0)
+            {
+                Console.WriteLine("No bookings found.");
+                return;
+            }
+
+            foreach (var booking in bookings)
+            {
+                Console.WriteLine($"ID: {booking.Id}, Flight ID: {booking.Flight.Id}, Class: {booking.SeatClass}, Date: {booking.BookDate}");
+            }
         }
-
-        foreach (var booking in bookings)
+        catch (ArgumentException argEx)
         {
-            Console.WriteLine($"ID: {booking.Id}, Flight ID: {booking.Flight.Id}, Class: {booking.SeatClass}, Date: {booking.BookDate}");
+            Console.WriteLine(argEx.Message);
+            return;
         }
 
         Console.WriteLine("1. Cancel a Booking\n2. Modify a Booking\n3. Back to Main Menu");

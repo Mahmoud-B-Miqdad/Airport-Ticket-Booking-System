@@ -1,4 +1,5 @@
-﻿using AirportTicketBookingSystem.Domain.Models;
+﻿using AirportTicketBookingSystem.Domain.Massages;
+using AirportTicketBookingSystem.Domain.Models;
 using AirportTicketBookingSystem.Domain.Repositories;
 using AirportTicketBookingSystem.Utilities;
 
@@ -23,7 +24,7 @@ public class BookingService : IBookingService
     public void BookFlight(int? flightId,Passenger passenger, SeatClass seatClass)
     {
         if(flightId == null)
-            throw new ArgumentNullException($"\nflightId Shoudnt be null");
+            throw new ArgumentNullException(string.Format(ErrorMessages.FlightIdNullError));
 
         var flight = new Flight { Id = flightId };
 
@@ -65,7 +66,7 @@ public class BookingService : IBookingService
         var booking = _bookingRepository.GetBookingById(bookingId);
         if (booking == null)
         {
-            throw new KeyNotFoundException($"Booking with ID {bookingId} not found.");
+            throw new KeyNotFoundException(string.Format(ErrorMessages.BookingNotFoundError, bookingId));
         }
 
         booking.Flight.Id = newFlightId;

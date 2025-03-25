@@ -1,4 +1,5 @@
-﻿using AirportTicketBookingSystem.Domain.Models;
+﻿using AirportTicketBookingSystem.Domain.Massages;
+using AirportTicketBookingSystem.Domain.Models;
 using AirportTicketBookingSystem.Domain.Repositories;
 using AirportTicketBookingSystem.Domain.Utilities;
 using AutoFixture;
@@ -38,7 +39,7 @@ public class FlightRepositoryTests
         Action act = () => _flightRepository.AddFlight(flight);
 
         act.Should().Throw<InvalidOperationException>()
-            .WithMessage($"\nBooking {flight.Id} already exists");
+            .WithMessage(string.Format(ErrorMessages.FlightAlreadyExists, flight.Id));
     }
 
     [Fact]

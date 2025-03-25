@@ -4,6 +4,7 @@ using Moq;
 using AirportTicketBookingSystem.Domain.Models;
 using AirportTicketBookingSystem.Domain.Repositories;
 using AirportTicketBookingSystem.Domain.Services;
+using AirportTicketBookingSystem.Domain.Massages;
 
 public class BookingServiceTests
 {
@@ -147,6 +148,6 @@ public class BookingServiceTests
 
         Action act = () => _bookingService.ModifyBooking(bookingId, newFlightId, newSeatClass);
 
-        act.Should().Throw<KeyNotFoundException>().WithMessage($"Booking with ID {bookingId} not found.");
+        act.Should().Throw<KeyNotFoundException>().WithMessage(string.Format(ErrorMessages.BookingNotFoundError, bookingId));
     }
 }

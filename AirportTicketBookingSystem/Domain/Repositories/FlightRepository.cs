@@ -1,4 +1,5 @@
-﻿using AirportTicketBookingSystem.Domain.Models;
+﻿using AirportTicketBookingSystem.Domain.Massages;
+using AirportTicketBookingSystem.Domain.Models;
 using AirportTicketBookingSystem.Domain.Utilities;
 
 namespace AirportTicketBookingSystem.Domain.Repositories;
@@ -28,7 +29,7 @@ public class FlightRepository : IFlightRepository
         }
         catch (Exception ex)
         {
-            throw new ApplicationException($"\nError parsing flight data: {ex.Message}", ex);
+            throw new ApplicationException(string.Format(ErrorMessages.FlightDataParsingError, ex.Message), ex);
         }
     }
 
@@ -37,7 +38,7 @@ public class FlightRepository : IFlightRepository
         foreach (var f in _flights)
         {
             if (f.Id == flight.Id)
-                throw new InvalidOperationException($"\nBooking {flight.Id} already exists");
+                throw new InvalidOperationException(string.Format(ErrorMessages.FlightAlreadyExists, flight.Id));
         }
         _flights.Add(flight);
         SaveFlights();
@@ -103,7 +104,7 @@ public class FlightRepository : IFlightRepository
                 }
                 catch (Exception ex)
                 {
-                    throw new ApplicationException($"\nError loading flights: {ex.Message}", ex);
+                    throw new ApplicationException(string.Format(ErrorMessages.FlightLoadingError, ex.Message), ex);
                 }
             }
         }
@@ -113,9 +114,9 @@ public class FlightRepository : IFlightRepository
     private void SaveFlights()
     {
         var lines = new List<string>
-{
-    "Id,DepartureCountry,DestinationCountry,DepartureDate,DepartureAirport,ArrivalAirport,Prices"
-};
+        {
+            FileHeaders.FlightHeader
+        };
 
         lines.AddRange(_flights.Select(f =>
             $"{f.Id},{f.DepartureCountry},{f.DestinationCountry},{f.DepartureDate:yyyy-MM-dd},{f.DepartureAirport},{f.ArrivalAirport}," +
