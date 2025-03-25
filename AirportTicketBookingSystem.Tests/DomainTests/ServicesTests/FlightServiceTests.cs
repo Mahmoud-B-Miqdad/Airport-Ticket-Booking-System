@@ -18,7 +18,7 @@ public class FlightServiceTests
     }
 
     [Fact]
-    public void AddFlight_ShouldCallRepositoryAddFlight()
+    public void AddFlight_WhenCalled_ShouldInvokeAddFlightOnRepository()
     {
         var flight = _fixture.Create<Flight>();
 
@@ -28,7 +28,7 @@ public class FlightServiceTests
     }
 
     [Fact]
-    public void AddFlight_ShouldThrowException_WhenFlightAlreadyExists()
+    public void AddFlight_WhenBookingAlreadyExists_ShouldThrowInvalidOperationException()
     {
         var flight = _fixture.Create<Flight>();
         _mockFlightRepo.Setup(repo => repo.AddFlight(It.IsAny<Flight>()))
@@ -41,7 +41,7 @@ public class FlightServiceTests
     }
 
     [Fact]
-    public void GetAllFlights_ShouldReturnAllFlights()
+    public void GetAllFlights_WhenCalled_ShouldReturnAllFlights()
     {
         var flights = _fixture.CreateMany<Flight>(5).ToList();
         _mockFlightRepo.Setup(repo => repo.GetAllFlights()).Returns(flights);
@@ -52,7 +52,7 @@ public class FlightServiceTests
     }
 
      [Fact]
-    public void GetAllFlights_ShouldReturnEmptyList_WhenNoFlightsAvailable()
+    public void GetAllFlights_WhenNoFlightsAvailable_ShouldReturnEmptyList()
     {
         _mockFlightRepo.Setup(repo => repo.GetAllFlights()).Returns(new List<Flight>());
 
@@ -62,7 +62,7 @@ public class FlightServiceTests
     }
 
     [Fact]
-    public void GetFlightById_ShouldReturnFlight_WhenFlightExists()
+    public void GetFlightById_WhenFlightExists_ShouldReturnFlight()
     {
         var flight = _fixture.Create<Flight>();
         _mockFlightRepo.Setup(repo => repo.GetFlightById(flight.Id)).Returns(flight);
@@ -73,7 +73,7 @@ public class FlightServiceTests
     }
 
     [Fact]
-    public void GetFlightById_ShouldReturnNull_WhenFlightDoesNotExist()
+    public void GetFlightById_WhenFlightDoesNotExist_ShouldReturnNull()
     {
         int invalidId = _fixture.Create<int>();
         _mockFlightRepo.Setup(repo => repo.GetFlightById(invalidId)).Returns((Flight?)null);
@@ -84,7 +84,7 @@ public class FlightServiceTests
     }
 
     [Fact]
-    public void SearchFlights_ShouldReturnMatchingFlights()
+    public void SearchFlights_WhenFlightsMatchCriteria_ShouldReturnMatchingFlights()
     {
         var flights = _fixture.CreateMany<Flight>(10).ToList();
         var targetFlight = flights.First();
@@ -97,7 +97,7 @@ public class FlightServiceTests
     }
 
     [Fact]
-    public void SearchFlights_ShouldReturnEmptyList_WhenNoMatch()
+    public void SearchFlights_WhenNoMatch_ShouldReturnEmptyList()
     {
         var flights = _fixture.CreateMany<Flight>(5).ToList();
         _mockFlightRepo.Setup(repo => repo.GetAllFlights()).Returns(flights);
@@ -108,7 +108,7 @@ public class FlightServiceTests
     }
 
     [Fact]
-    public void GetPriceByClass_ShouldReturnCorrectPrice_WhenSeatClassExists()
+    public void GetPriceByClass_WhenSeatClassExists_ShouldReturnCorrectPrice()
     {
         var flight = _fixture.Create<Flight>();
         flight.Prices["business"] = 500.0;
@@ -119,7 +119,7 @@ public class FlightServiceTests
     }
 
     [Fact]
-    public void GetPriceByClass_ShouldReturnDefaultPrice_WhenSeatClassDoesNotExist()
+    public void GetPriceByClass_WhenSeatClassDoesNotExist_ShouldReturnDefaultPrice()
     {
         var flight = _fixture.Create<Flight>();
         //flight.Prices["economy"] = 200.0;

@@ -19,7 +19,7 @@ public class FlightRepositoryTests
     }
 
     [Fact]
-    public void AddFlight_ShouldAddFlightSuccessfully()
+    public void AddFlight_WhenFlightIsValid_ShouldAddFlightToList()
     {
         var flight = _fixture.Create<Flight>();
 
@@ -30,7 +30,7 @@ public class FlightRepositoryTests
     }
 
     [Fact]
-    public void AddFlight_Should_ThrowException_When_FlightAlreadyExists()
+    public void AddFlight_WhenFlightAlreadyExists_ShouldThrowException()
     {
         var flight = _fixture.Create<Flight>();
 
@@ -42,7 +42,7 @@ public class FlightRepositoryTests
     }
 
     [Fact]
-    public void GetAllFlights_Should_Return_AllFlights()
+    public void GetAllFlights_WhenCalled_ShouldReturnAllFlights()
     {
         var flight1 = _fixture.Create<Flight>();
         var flight2 = _fixture.Create<Flight>();
@@ -56,7 +56,7 @@ public class FlightRepositoryTests
     }
 
     [Fact]
-    public void GetAllFlights_ShouldReturnEmptyList_WhenNoFlightsAdded()
+    public void GetAllFlights_WhenNoFlightsAdded_ShouldReturnEmptyList()
     {
         var flights = _flightRepository.GetAllFlights();
 
@@ -64,7 +64,7 @@ public class FlightRepositoryTests
     }
 
     [Fact]
-    public void GetFlightById_ShouldReturnFlight_WhenFlightExists()
+    public void GetFlightById_WhenFlightExists_ShouldReturnFlight()
     {
         var flight = _fixture.Create<Flight>();
         _flightRepository.AddFlight(flight);
@@ -76,7 +76,7 @@ public class FlightRepositoryTests
     }
 
     [Fact]
-    public void GetFlightById_ShouldReturnNull_WhenFlightDoesNotExist()
+    public void GetFlightById_WhenFlightDoesNotExist_ShouldReturnNull()
     {
         var retrievedFlight = _flightRepository.GetFlightById(999);
 

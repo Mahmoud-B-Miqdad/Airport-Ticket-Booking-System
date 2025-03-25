@@ -21,7 +21,7 @@ public class BookingServiceTests
     }
 
     [Fact]
-    public void BookFlight_ShouldAddBooking_WhenValidDataProvided()
+    public void BookFlight_WhenValidDataProvided_ShouldAddBooking()
     {
         var passenger = _fixture.Create<Passenger>();
         var seatClass = _fixture.Create<SeatClass>();
@@ -33,7 +33,7 @@ public class BookingServiceTests
     }
 
     [Fact]
-    public void BookFlight_ShouldThrowException_WhenFlightIdIsNull()
+    public void BookFlight_WhenFlightIdIsNull_ShouldThrowException()
     {
         var passenger = _fixture.Create<Passenger>();
         var seatClass = _fixture.Create<SeatClass>();
@@ -45,7 +45,7 @@ public class BookingServiceTests
 
 
     [Fact]
-    public void GetBookingsByPassenger_ShouldReturnBookings_WhenPassengerHasBookings()
+    public void GetBookingsByPassenger_WhenPassengerHasBookings_ShouldReturnBookings()
     {
         int passengerId = _fixture.Create<int>();
         var bookings = _fixture.Create<List<Booking>>();
@@ -57,7 +57,7 @@ public class BookingServiceTests
     }
 
     [Fact]
-    public void GetBookingsByPassenger_ShouldReturnEmptyList_WhenPassengerHasNoBookings()
+    public void GetBookingsByPassenger_WhenPassengerHasNoBookings_ShouldReturnEmptyList()
     {
         int passengerId = _fixture.Create<int>();
         _mockBookingRepo.Setup(repo => repo.GetBookingsByPassenger(passengerId))
@@ -69,7 +69,7 @@ public class BookingServiceTests
     }
 
     [Fact]
-    public void CancelBooking_ShouldCallRepositoryCancel_WhenBookingIdIsNotNull()
+    public void CancelBooking_WhenBookingIdIsNotNull_ShouldCallRepositoryCancel()
     {
         int bookingId = _fixture.Create<int>();
 
@@ -79,7 +79,7 @@ public class BookingServiceTests
     }
 
     [Fact]
-    public void CancelBooking_ShouldThrowKeyNotFoundException_WhenBookingDoesNotExist()
+    public void CancelBooking_WhenBookingDoesNotExist_ShouldThrowKeyNotFoundException()
     {
         int invalidBookingId = _fixture.Create<int>();
         _mockBookingRepo
@@ -96,7 +96,7 @@ public class BookingServiceTests
 
 
     [Fact]
-    public void GetAllBookings_ShouldReturnAllBookings()
+    public void GetAllBookings_WhenCalled_ShouldReturnAllBookings()
     {
         var bookings = _fixture.Create<List<Booking>>();
         _mockBookingRepo.Setup(repo => repo.GetAllBookings()).Returns(bookings);
@@ -107,7 +107,7 @@ public class BookingServiceTests
     }
 
     [Fact]
-    public void GetAllBookings_ShouldReturnEmptyList_When_NoBookingsExist()
+    public void GetAllBookings_WhenNoBookingsExist_ShouldReturnEmptyList()
     {
         var bookings = _fixture.Create<List<Booking>>();
         _mockBookingRepo.Setup(repo => repo.GetAllBookings()).Returns(new List<Booking>());
@@ -118,7 +118,7 @@ public class BookingServiceTests
     }
 
     [Fact]
-    public void GetLastBooking_ShouldReturnLastBooking()
+    public void GetLastBooking_WhenBookingsExist_ShouldReturnLastBooking()
     {
         var booking = _fixture.Create<Booking>();
         _mockBookingRepo.Setup(repo => repo.GetLastBooking()).Returns(booking);
@@ -129,7 +129,7 @@ public class BookingServiceTests
     }
 
     [Fact]
-    public void GetLastBooking_ShouldReturnNull_WhenNoBookingsExist()
+    public void GetLastBooking_WhenNoBookingsExist_ShouldReturnNull()
     {
         _mockBookingRepo.Setup(repo => repo.GetLastBooking()).Returns((Booking?)null);
 
@@ -139,7 +139,7 @@ public class BookingServiceTests
     }
 
     [Fact]
-    public void ModifyBooking_ShouldUpdateBooking_WhenBookingExists()
+    public void ModifyBooking_WhenBookingExists_ShouldUpdateBooking()
     {
         int bookingId = _fixture.Create<int>();
         int newFlightId = _fixture.Create<int>();
@@ -155,7 +155,7 @@ public class BookingServiceTests
     }
 
     [Fact]
-    public void ModifyBooking_ShouldThrowException_WhenBookingNotFound()
+    public void ModifyBooking_WhenBookingNotFound_ShouldThrowException()
     {
         int bookingId = _fixture.Create<int>();
         int newFlightId = _fixture.Create<int>();

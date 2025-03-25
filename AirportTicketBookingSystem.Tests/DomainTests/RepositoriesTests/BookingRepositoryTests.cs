@@ -24,7 +24,7 @@ public class BookingRepositoryTests
     }
 
     [Fact]
-    public void AddBooking_Should_AddBookingToList()
+    public void AddBooking_WhenValidBookingProvided_ShouldAddBookingToList()
     {
         var booking = _fixture.Create<Booking>();
         //var booking = new Booking { Id = 1, Flight = new Flight { Id = 101 }, Passenger = new Passenger
@@ -36,7 +36,7 @@ public class BookingRepositoryTests
     }
 
     [Fact]
-    public void AddBooking_Should_ThrowException_When_BookingAlreadyExists()
+    public void AddBooking_WhenBookingAlreadyExists_ShouldThrowException()
     {
         var booking = _fixture.Create<Booking>();
 
@@ -48,7 +48,7 @@ public class BookingRepositoryTests
     }
 
     [Fact]
-    public void GetBookingsByPassenger_Should_Return_CorrectBookings()
+    public void GetBookingsByPassenger_WhenPassengerHasBookings_ShouldReturnCorrectBookings()
     {
         var booking = _fixture.Create<Booking>();
 
@@ -59,7 +59,7 @@ public class BookingRepositoryTests
     }
 
     [Fact]
-    public void GetBookingsByPassenger_Should_ReturnEmptyList_When_NoBookingsForGivenPassenger()
+    public void GetBookingsByPassenger_WhenNoBookingsForGivenPassenger_ShouldReturnEmptyList()
     {
         var passenger = _fixture.Build<Passenger>()
                        .With(p => p.Id, 2).Create();
@@ -76,14 +76,14 @@ public class BookingRepositoryTests
     [Theory]
     [InlineData(-1)]
     [InlineData(0)]
-    public void GetBookingsByPassenger_Should_ThrowException_When_PassengerIdIsInvalid(int invalidPassengerId)
+    public void GetBookingsByPassenger_WhenPassengerIdIsInvalid_ShouldThrowException(int invalidPassengerId)
     {
         Action act = () => _bookingRepository.GetBookingsByPassenger(invalidPassengerId);
         act.Should().Throw<ArgumentException>().WithMessage("Invalid passenger ID");
     }
 
     [Fact]
-    public void GetBookingById_Should_Return_CorrectBooking()
+    public void GetBookingById_WhenBookingExists_ShouldReturnCorrectBooking()
     {
         var booking1 = _fixture.Create<Booking>();
         var booking2 = _fixture.Create<Booking>();
@@ -97,14 +97,14 @@ public class BookingRepositoryTests
     }
 
     [Fact]
-    public void GetBookingById_Should_Return_Null_When_BookingNotFound()
+    public void GetBookingById_WhenBookingNotFound_ShouldReturnNull()
     {
         var result = _bookingRepository.GetBookingById(999);
         result.ShouldBeNull();
     }
 
     [Fact]
-    public void CancelBooking_Should_RemoveBooking()
+    public void CancelBooking_WhenBookingExists_ShouldRemoveBooking()
     {
         var booking1 = _fixture.Create<Booking>();
         var booking2 = _fixture.Create<Booking>();
@@ -117,14 +117,14 @@ public class BookingRepositoryTests
     }
 
     [Fact]
-    public void CancelBooking_Should_ThrowException_When_BookingNotFound()
+    public void CancelBooking_WhenBookingNotFound_ShouldThrowException()
     {
         Action act = () => _bookingRepository.CancelBooking(999);
         act.Should().Throw<KeyNotFoundException>().WithMessage($"\nBooking ID {999} Not Found.");
     }
 
     [Fact]
-    public void GetAllBookings_Should_Return_AllBookings()
+    public void GetAllBookings_WhenCalled_ShouldReturnAllBookings()
     {
         var booking1 = _fixture.Create<Booking>();
         var booking2 = _fixture.Create<Booking>();
@@ -138,14 +138,14 @@ public class BookingRepositoryTests
     }
 
     [Fact]
-    public void GetAllBookings_Should_ReturnEmptyList_When_NoBookingsExist()
+    public void GetAllBookings_WhenNoBookingsExist_ShouldReturnEmptyList()
     {
         var result = _bookingRepository.GetAllBookings();
         result.Should().BeEmpty();
     }
 
     [Fact]
-    public void GetLastBooking_Should_Return_LastBooking()
+    public void GetLastBooking_WhenBookingsExist_ShouldReturnLastBooking()
     {
         var booking1 = _fixture.Create<Booking>();
         var booking2 = _fixture.Create<Booking>();
@@ -160,14 +160,14 @@ public class BookingRepositoryTests
     }
 
     [Fact]
-    public void GetLastBooking_Should_Return_Null_When_NoBookings()
+    public void GetLastBooking_WhenNoBookingsExist_ShouldReturnNull()
     {
         var result = _bookingRepository.GetLastBooking();
         result.ShouldBeNull();
     }
 
     [Fact]
-    public void UpdateBooking_Should_ModifyExistingBooking()
+    public void UpdateBooking_WhenBookingExists_ShouldModifyExistingBooking()
     {
         var booking = _fixture.Build<Booking>()
                       .With(b => b.Id, 1).Create();
@@ -190,7 +190,7 @@ public class BookingRepositoryTests
     }
 
     [Fact]
-    public void UpdateBooking_Should_ThrowException_When_BookingNotFound()
+    public void UpdateBooking_WhenBookingNotFound_ShouldThrowException()
     {
         var updatedBooking = _fixture.Build<Booking>()
                      .With(b => b.Id, 999).Create();
