@@ -133,7 +133,7 @@ public class AdminHandler
             Console.WriteLine("\nFiltered Bookings based on your search:");
             foreach (var (booking, flight) in bookings)
             {
-                double bookingPrice = flight != null ? _flightService.GetPriceByClass(flight, booking.SeatClass) : 0.0;
+                double bookingPrice = flight != null ? flight.GetPriceByClass(booking.SeatClass) : 0.0;
 
                 Console.WriteLine($"Booking ID: {booking.Id}, Passenger: {booking.Passenger.Name}, " +
                                   $"Flight ID: {booking.Flight.Id}, Seat Class: {booking.SeatClass}, Price: {bookingPrice:C}");

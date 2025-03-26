@@ -21,11 +21,12 @@ env:
 jobs:
   build-and-test:
 
-    name: build-and-test-${{matrix.os}}
+    name: build-and-test
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
+
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v3
       with:
@@ -33,9 +34,19 @@ jobs:
 
     - name: Install dependencies
       run: dotnet restore
-      
+
+    - name: Verify .NET SDK version
+      run: dotnet --version 
+
+
+    - name: Verify Installed Packages
+      run: dotnet list package 
+
     - name: Build
       run: dotnet build --configuration Release --no-restore
-    
+  
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      run: |
+        dotnet test --no-restore --verbosity normal
+
+

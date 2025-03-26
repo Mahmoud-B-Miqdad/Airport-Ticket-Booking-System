@@ -15,5 +15,4 @@ public interface IFlightService
         double? maxPrice = null);
     List<Flight> GetAllFlights();
     Flight GetFlightById(int? flightId);
-    double GetPriceByClass(Flight flight, SeatClass seatClass);
 }

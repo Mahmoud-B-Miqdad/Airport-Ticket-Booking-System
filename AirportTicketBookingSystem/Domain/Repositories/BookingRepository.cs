@@ -1,4 +1,5 @@
-﻿using AirportTicketBookingSystem.Domain.Models;
+﻿using AirportTicketBookingSystem.Domain.Massages;
+using AirportTicketBookingSystem.Domain.Models;
 using AirportTicketBookingSystem.Domain.Services;
 using AirportTicketBookingSystem.Domain.Utilities;
 
@@ -29,20 +30,28 @@ public class BookingRepository : IBookingRepository
         }
         catch (Exception ex)
         {
-            throw new ApplicationException($"\nError parsing Booking data: {ex.Message}", ex);
+            throw new ApplicationException(string.Format(ErrorMessages.BookingDataParseError, ex.Message), ex);
         }
     }
 
 
     public void AddBooking(Booking booking)
     {
+        foreach (var b in _bookings)
+        {
+            if (b.Id == booking.Id)
+                throw new InvalidOperationException(string.Format(ErrorMessages.BookingAlreadyExists, booking.Id));
+        }
         _bookings.Add(booking);
         SaveBookings();
     }
 
     public List<Booking> GetBookingsByPassenger(int passengerId)
     {
-        return _bookings.Where(b => b.Passenger.Id == passengerId).ToList(); 
+        if (passengerId <= 0)
+            throw new ArgumentException(string.Format(ErrorMessages.InvalidPassengerID, passengerId));
+
+        return _bookings.Where(b => b.Passenger.Id == passengerId).ToList();
     }
 
     public Booking GetBookingById(int bookingId)
@@ -55,7 +64,7 @@ public class BookingRepository : IBookingRepository
         var booking = GetBookingById(bookingId);
         if (booking == null)
         {
-            throw new KeyNotFoundException($"\nBooking ID {bookingId} Not Found.");
+            throw new KeyNotFoundException(string.Format(ErrorMessages.BookingNotFound, bookingId));
         }
         _bookings.Remove(booking);
         SaveBookings();
@@ -68,18 +77,22 @@ public class BookingRepository : IBookingRepository
 
     public Booking GetLastBooking()
     {
-        return _bookings.Last();
+        if (_bookings.Count > 0)
+            return _bookings.Last();
+        else
+            return null;
     }
 
     public void UpdateBooking(Booking updatedBooking)
     {
         var existingBooking = GetBookingById(updatedBooking.Id);
-        if (existingBooking != null)
+        if (existingBooking == null)
         {
-            existingBooking.Flight.Id = updatedBooking.Flight.Id;
-            existingBooking.SeatClass = updatedBooking.SeatClass;
-            SaveBookings();
+            throw new KeyNotFoundException(string.Format(ErrorMessages.BookingNotFound, updatedBooking.Id));
         }
+        existingBooking.Flight.Id = updatedBooking.Flight.Id;
+        existingBooking.SeatClass = updatedBooking.SeatClass;
+        SaveBookings();
     }
 
     private void LoadBookings()
@@ -112,23 +125,23 @@ public class BookingRepository : IBookingRepository
                         Passenger = _passenger,
                         BookDate = DateTime.Parse(parts[6])
                     };
-                        
+
                     _bookings.Add(booking);
                 }
                 catch (Exception ex)
                 {
-                    throw new ApplicationException($"\nError loading bookings: {ex.Message}", ex);
+                    throw new ApplicationException(string.Format(ErrorMessages.ErrorLoadingBookings, ex.Message), ex);
                 }
             }
         }
     }
 
-    public List<(Booking Booking, Flight Flight)> FilteredBookings(
-List<Flight> filteredFlights, double? price, SeatClass seatClass, string passenger)
+    public List<(Booking Booking, Flight Flight)> FilteredBookings(List<Flight> filteredFlights,
+        double? price, SeatClass seatClass, string passenger)
     {
         var filteredBookings = (from b in _bookings
                                 join f in filteredFlights on b.Flight.Id equals f.Id
-                                where (price == null || _flightsService.GetPriceByClass(f, seatClass) <= price.Value) &&
+                                where (price == null || f.GetPriceByClass(seatClass) <= price.Value) &&
                                       (string.IsNullOrEmpty(passenger) || b.Passenger.Name.Equals(passenger, StringComparison.OrdinalIgnoreCase)) &&
                                       (seatClass == null || b.SeatClass == seatClass)
                                 select (Booking: b, Flight: f))
@@ -139,9 +152,10 @@ List<Flight> filteredFlights, double? price, SeatClass seatClass, string passeng
 
     private void SaveBookings()
     {
+
         var lines = new List<string>
         {
-            "Id,FlightId,PassengerId,PassengerName,PassengerEmail,Class,BookDate"
+            FileHeaders.BookingHeader
         };
 
         lines.AddRange(_bookings.Select(b =>

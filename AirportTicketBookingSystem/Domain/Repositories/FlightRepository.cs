@@ -1,4 +1,5 @@
-﻿using AirportTicketBookingSystem.Domain.Models;
+﻿using AirportTicketBookingSystem.Domain.Massages;
+using AirportTicketBookingSystem.Domain.Models;
 using AirportTicketBookingSystem.Domain.Utilities;
 
 namespace AirportTicketBookingSystem.Domain.Repositories;
@@ -28,12 +29,17 @@ public class FlightRepository : IFlightRepository
         }
         catch (Exception ex)
         {
-            throw new ApplicationException($"\nError parsing flight data: {ex.Message}", ex);
+            throw new ApplicationException(string.Format(ErrorMessages.FlightDataParsingError, ex.Message), ex);
         }
     }
 
     public void AddFlight(Flight flight)
     {
+        foreach (var f in _flights)
+        {
+            if (f.Id == flight.Id)
+                throw new InvalidOperationException(string.Format(ErrorMessages.FlightAlreadyExists, flight.Id));
+        }
         _flights.Add(flight);
         SaveFlights();
     }
@@ -46,6 +52,25 @@ public class FlightRepository : IFlightRepository
     public Flight GetFlightById(int? flightId)
     {
         return _flights.FirstOrDefault(f => f.Id == flightId);
+    }
+
+    public List<Flight> SearchFlights(
+       string departureCountry = "",
+       string destinationCountry = "",
+       string departureAirport = "",
+       string arrivalAirport = "",
+       DateTime? departureDate = null,
+       SeatClass? seatClass = null,
+       double? maxPrice = null)
+    {
+        return _flights.Where(f =>
+            (string.IsNullOrEmpty(departureCountry) || f.DepartureCountry.Equals(departureCountry, StringComparison.OrdinalIgnoreCase)) &&
+            (string.IsNullOrEmpty(destinationCountry) || f.DestinationCountry.Equals(destinationCountry, StringComparison.OrdinalIgnoreCase)) &&
+            (string.IsNullOrEmpty(departureAirport) || f.DepartureAirport.Equals(departureAirport, StringComparison.OrdinalIgnoreCase)) &&
+            (string.IsNullOrEmpty(arrivalAirport) || f.ArrivalAirport.Equals(arrivalAirport, StringComparison.OrdinalIgnoreCase)) &&
+            (!departureDate.HasValue || f.DepartureDate.Date == departureDate.Value.Date) &&
+            (maxPrice == null || f.GetPriceByClass(seatClass ?? SeatClass.None) <= maxPrice.Value)
+        ).ToList();
     }
 
     private void LoadFlights()
@@ -79,7 +104,7 @@ public class FlightRepository : IFlightRepository
                 }
                 catch (Exception ex)
                 {
-                    throw new ApplicationException($"\nError loading flights: {ex.Message}", ex);
+                    throw new ApplicationException(string.Format(ErrorMessages.FlightLoadingError, ex.Message), ex);
                 }
             }
         }
@@ -89,9 +114,9 @@ public class FlightRepository : IFlightRepository
     private void SaveFlights()
     {
         var lines = new List<string>
-{
-    "Id,DepartureCountry,DestinationCountry,DepartureDate,DepartureAirport,ArrivalAirport,Prices"
-};
+        {
+            FileHeaders.FlightHeader
+        };
 
         lines.AddRange(_flights.Select(f =>
             $"{f.Id},{f.DepartureCountry},{f.DestinationCountry},{f.DepartureDate:yyyy-MM-dd},{f.DepartureAirport},{f.ArrivalAirport}," +
