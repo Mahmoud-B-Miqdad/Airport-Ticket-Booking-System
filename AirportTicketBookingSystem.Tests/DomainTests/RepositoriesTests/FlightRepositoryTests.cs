@@ -120,7 +120,7 @@ public class FlightRepositoryTests : IDisposable
     {
         if (_fileStorage is FakeFileHandler fakeFileHandler)
         {
-            fakeFileHandler.DeleteFile("test-file");
+            fakeFileHandler.DeleteFile();
         }
     }
 
